@@ -17,32 +17,26 @@ export interface ProjectSummary {
   featured: boolean;
 }
 
-export function ProjectCard({ p }: { p: ProjectSummary; index?: number }) {
+/** A project as one row of an index: number, title and line, status and areas, and an arrow. */
+export function ProjectCard({ p, index = 0 }: { p: ProjectSummary; index?: number }) {
   return (
-    <Link
-      href={`/projects/${p.slug}`}
-      className="lift group flex h-full flex-col rounded-2xl border border-line bg-paper p-5 sm:p-6"
-      data-reveal
-    >
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <Link href={`/projects/${p.slug}`} className="index-row group" data-reveal>
+      <span className="font-mono text-[0.75rem] text-ink-3">{String(index + 1).padStart(2, "0")}</span>
+      <div className="min-w-0">
         <p className="eyebrow">
           {projectKindLabel[p.kind]} · {p.period}
         </p>
-        <ProjectStatusTag status={p.status} />
+        <ViewTransition name={`project-title-${p.slug}`} share="morph" default="none">
+          <h3 className="display mt-2 text-[1.45rem] leading-tight text-ink sm:text-[1.7rem]">{p.title}</h3>
+        </ViewTransition>
+        <p className="mt-2 max-w-2xl text-[0.95rem] leading-relaxed text-ink-2">{p.tagline}</p>
       </div>
-      <ViewTransition name={`project-title-${p.slug}`} share="morph" default="none">
-        <h3 className="mt-5 text-[1.3rem] leading-tight font-medium tracking-tight text-ink">{p.title}</h3>
-      </ViewTransition>
-      <p className="mt-2.5 text-[0.95rem] leading-relaxed text-ink-2">{p.tagline}</p>
-      <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Areas">
-        {p.domains.slice(0, 3).map((d) => (
-          <li key={d} className="rounded-full bg-pale px-2.5 py-1 text-[0.72rem] text-ink-2">
-            {d}
-          </li>
-        ))}
-      </ul>
-      <span className="mt-auto flex items-center gap-1.5 pt-6 text-[0.85rem] text-ink">
-        Read the case study <span aria-hidden className="arrow-nudge">→</span>
+      <div className="flex flex-wrap items-center gap-2 lg:flex-col lg:items-end">
+        <ProjectStatusTag status={p.status} />
+        <span className="text-[0.78rem] text-ink-3">{p.domains.slice(0, 2).join(" · ")}</span>
+      </div>
+      <span aria-hidden className="theme-arrow hidden lg:block">
+        →
       </span>
     </Link>
   );

@@ -1,9 +1,10 @@
 import type { Paper } from "../types";
 
 /**
- * Manuscripts that are complete but not yet submitted. Their abstracts and full
- * text are withheld until submission; every result quoted here is already
- * public in the RE-FUSED repository.
+ * Manuscripts that are complete but not yet submitted. Each is shown in full as a
+ * preprint (the latest revised PDF in public/papers), with its abstract and
+ * highlights verbatim; every result quoted here is also public in the RE-FUSED
+ * repository.
  */
 
 const REPO = "https://github.com/Ohi-Me/RE-FUSED";
@@ -15,7 +16,7 @@ export const publicationDelay: Paper = {
   title: "What publication delay costs: a pre-registered evaluation of day-ahead forecasting for India's State power systems",
   shortTitle: "What publication delay costs",
   status: "manuscript",
-  statusNote: "Complete manuscript prepared for Applied Energy; not yet submitted.",
+  statusNote: "Final revised manuscript (26 October 2026) prepared for Applied Energy; not yet submitted. Shown here as a preprint.",
   venue: "Prepared for Applied Energy",
   year: "2026",
   sortDate: "2026-10",
@@ -23,10 +24,25 @@ export const publicationDelay: Paper = {
   authorship: "Sole author (as in the current manuscript)",
   contribution: ["All research, code, analysis and writing."],
   links: [
+    { label: "Manuscript (PDF)", href: "/papers/publication-delay-forecasting.pdf", kind: "paper" },
     { label: "Code and results", href: REPO, kind: "repo" },
     { label: "Results guide", href: RESULTS, kind: "doc" },
   ],
-  disclosure: "The abstract and full text are withheld until the manuscript is submitted. The results below are public in the repository.",
+  abstract:
+    "State control areas in India forecast demand, drawal, generation and prices from public data that arrive one to fourteen days after the event, and some sources drop out altogether. We treat this delay as part of the forecasting problem. In a State-day panel of 104,550 rows built only from official reports, every variable enters a forecast only after its measured publication delay. Running the same model as if all data were published at once shows that waiting costs between 15.1 % and 137.7 % of accuracy across five targets. We combine thirteen forecasters, among them pretrained models with covariates and a context model that weighs each source by how stale it is, and fix every choice in a pre-registration before a seventeen-month evaluation period is opened. Scored once on 34 State control areas, the final forecaster beats the seasonal naive and the single model chosen a year earlier on all five targets, and its 80 % and 90 % intervals stay within five points of nominal coverage. Staleness-aware gating helps on three of five targets; three further context claims, including graceful degradation when a source stops, are not supported and are reported as findings. Of the 38 pre-registered checks reported here, 27 are supported. In an additional analysis that was not pre-registered, we pass every forecaster through a frozen day-ahead scheduling rule: each 0.1 GWh of mean absolute error per State-day costs about 0.26 Rs crore per day of system-wide settlement regret.",
+  highlights: [
+    "State-day forecasts built only from official Indian reports, delays included",
+    "Publication delay costs 15.1% to 137.7% of forecast accuracy",
+    "Combined forecaster beats seasonal naive and last year's model on all 5 targets",
+    "Staleness-aware gating helps on 3 of 5 targets; failed claims reported in full",
+    "Each 0.1 GWh of forecast error costs about 0.26 Rs crore a day in settlement",
+  ],
+  fullText: {
+    pdf: "/papers/publication-delay-forecasting.pdf",
+    version: "Preprint · final revision",
+    date: "26 October 2026",
+    note: "Author's final revised manuscript, prepared for Applied Energy and not yet peer reviewed. 49 pages in the journal's double-spaced review layout.",
+  },
   plain:
     "Forecasters of Indian State power data usually assume yesterday's numbers are available today. They are not: some reports come out a day later, some two weeks later. This study forecasts five quantities using only what was public at the time, fixes every choice before looking at the final 17 months, and measures how much the delay costs. The honest forecasts still beat the standard baseline everywhere, but the delay raises error by 15% to 138%.",
   keyMetrics: [
@@ -133,6 +149,29 @@ export const publicationDelay: Paper = {
   ],
   revisions: [
     {
+      version: "Final check",
+      date: "26 October 2026",
+      summary: "New title, and every page of the manuscript and supplement read again after rendering.",
+      changes: [
+        "CEA's State renewable report did not stop in November 2025, it moved to a new portal; the text now says the source dropped out of the listing the pipeline read. Pre-registered results unchanged.",
+        "Contribution 2 no longer claims graceful degradation, because that pre-registered check (H7) was not supported.",
+        "Appendix tables renumbered A.1–A.6 in page order; figure axes corrected so they agree with the table captions.",
+        "Checks: 0 LaTeX errors, 0 undefined references, 0 overfull boxes; abstract 242 words.",
+      ],
+    },
+    {
+      version: "Applied Energy revision",
+      date: "25 October 2026",
+      summary: "Rewritten for Applied Energy against its current Guide for Authors, with the equations matched line by line to the code.",
+      changes: [
+        "Introduction framed around the State Load Despatch Centres' duty under the 2023 Grid Code (day-ahead demand estimates, published forecast errors).",
+        "Related work rewritten with a table of lines of work against what this paper adds; 16 new verified references (63 in all).",
+        "Method: quantile sorting named as monotone rearrangement with a proof that it never increases pinball loss; the online gate window, conformal ranks and online weights written exactly as the code computes them.",
+        "Proof that the settlement regret is non-negative and zero for a perfect schedule; leakage test, block bootstrap and multiple-testing corrections described and cited.",
+        "New discussion paragraph for SLDCs, RLDCs and the regulator; new graphical abstract built from the generated numbers only.",
+      ],
+    },
+    {
       version: "Manuscript complete",
       date: "October 2026",
       summary: "Prepared for Applied Energy; not yet submitted.",
@@ -163,7 +202,7 @@ export const stateDayPanel: Paper = {
   title: "A provenance-tracked State-day panel of India's power system built from official public reports, 2018–2026",
   shortTitle: "A provenance-tracked State-day panel",
   status: "manuscript",
-  statusNote: "Data descriptor prepared for Scientific Data; not yet submitted. The dataset itself is published on Zenodo.",
+  statusNote: "Final revised data descriptor (26 October 2026) prepared for Scientific Data; not yet submitted. Shown here as a preprint. The dataset itself is published on Zenodo.",
   venue: "Prepared for Scientific Data",
   year: "2026",
   sortDate: "2026-10",
@@ -171,10 +210,18 @@ export const stateDayPanel: Paper = {
   authorship: "Sole author (as in the current manuscript)",
   contribution: ["Data acquisition, parsing, validation, documentation and writing."],
   links: [
+    { label: "Manuscript (PDF)", href: "/papers/india-state-day-panel.pdf", kind: "paper" },
     { label: "Dataset (Zenodo)", href: "https://doi.org/10.5281/zenodo.23301898", kind: "dataset" },
     { label: "Data guide", href: `${REPO}/blob/main/Docs/DATA.md`, kind: "doc" },
   ],
-  disclosure: "The manuscript text is withheld until submission. The dataset and its documentation are public.",
+  abstract:
+    "India publishes detailed daily information on electricity demand, scheduling, generation and prices, but as thousands of report files whose layouts change over time, spread across the grid operator, the Central Electricity Authority and the meteorological department. We describe a State-day panel for 34 Indian State control areas from 2018-04-01 to 2026-08-31 (104,550 State-days, 107 variables). It joins, from official sources only, energy met and shortages, scheduled and actual drawal with over- and under-drawal, conventional generation by fuel, renewable generation, bid-area exchange prices and deviation charge rates, system frequency stress, carbon intensity and weather. Every one of the 18,233 source files is recorded with its URL, retrieval time and SHA-256 hash, and the panel can be rebuilt deterministically from the raw files. Each variable carries its measured publication delay, so forecasting studies can respect what was known on each day. Technical validation reproduces the sources' own totals exactly and agrees with an independent copy of the generation data within 1% on 100.0% of 75,485 State-days.",
+  fullText: {
+    pdf: "/papers/india-state-day-panel.pdf",
+    version: "Preprint · final revision",
+    date: "26 October 2026",
+    note: "Author's final revised data descriptor, prepared for Scientific Data and not yet peer reviewed.",
+  },
   plain:
     "India publishes detailed daily electricity data, but as thousands of report files whose layouts change over time, spread across several agencies. This paper describes one clean, open table built only from those official reports, where every value can be traced to its source file and every column records how long after the day it becomes public.",
   keyMetrics: [
@@ -264,6 +311,17 @@ export const stateDayPanel: Paper = {
   ],
   revisions: [
     {
+      version: "Scientific Data revision",
+      date: "25 October 2026",
+      summary: "Restructured to the journal's data descriptor format, with a new cross-portal validation.",
+      changes: [
+        "Found that CEA moved its daily renewable report to a new portal (gen-re.cea.gov.in) in November 2025; 304 missing days were downloaded and parsed. The 18 days published on both portals agree in all 5,040 parsed cells.",
+        "Missing renewables from April 2025 fall from 56.7% to 3.2% in panel version 1.1; version 1.0 stays frozen for the companion papers, which cite its own DOI.",
+        "Sections reordered to the journal's template (Methods, Data Records, Data Overview, Technical Validation, Usage Notes, Code Availability); abstract 164 words, title 106 characters.",
+        "Input data cited by their exact report pages, not agency homepages; a sentence that called the companion studies 'under review' corrected.",
+      ],
+    },
+    {
       version: "v1.1 prepared",
       date: "October 2026",
       summary: "Adds CEA's daily renewable reports from its new portal (gen-re.cea.gov.in), from 19 November 2025.",
@@ -285,7 +343,7 @@ export const adaptiveCorrection: Paper = {
   title: "When does adaptive correction of day-ahead forecasts pay? Evidence from India's power system",
   shortTitle: "When does adaptive correction pay?",
   status: "manuscript",
-  statusNote: "Complete manuscript prepared for Energy Conversion and Management; awaiting the co-author's approval before submission.",
+  statusNote: "Final revised manuscript (23 October 2026) prepared for Energy Conversion and Management; not yet submitted. Shown here as a preprint.",
   venue: "Prepared for Energy Conversion and Management",
   year: "2026",
   sortDate: "2026-10",
@@ -293,10 +351,25 @@ export const adaptiveCorrection: Paper = {
   authorship: "First author",
   contribution: ["Research design, code, experiments, analysis and the draft."],
   links: [
+    { label: "Manuscript (PDF)", href: "/papers/adaptive-forecast-correction.pdf", kind: "paper" },
     { label: "Code and results", href: `${REPO}/tree/main/Forecast_Correction_India`, kind: "repo" },
     { label: "Results guide", href: RESULTS, kind: "doc" },
   ],
-  disclosure: "The abstract and full text are withheld until the co-author approves and the manuscript is submitted. The results below are public in the repository.",
+  abstract:
+    "Day-ahead demand, drawal and generation forecasts are corrected with models of recent errors, and the weight (gate) on the correction is increasingly specific to a region, hour, observation or time. As forecast errors must be balanced or covered by reserve, we ask when such adaptivity pays in energy terms in India. A finer gate helps only if the variation it exploits is large, persists into operation and outweighs its estimation cost; two validation-only rules estimate this criterion, tested under two pre-registrations on government data. On 34 State control areas (April 2025 to August 2026), one fixed gate removed 13,374 GWh per year (15%) of next-day drawal forecast-error energy (post-hoc analysis), whereas finer gates left significantly more error energy in 9 of 36 cases and less in 3. On all-India hourly series, the validation-only rules, confirmed earlier on New York, European and client data, were not confirmed (5 of 20 tests supported), and no design helped the N-HiTS or Chronos-Bolt forecasts. In exploratory benchmarks, a simple bias correction refitted daily on each forecast's own errors removed 34.7% of the squared error of a LightGBM forecast, against at most 12.7% for any gated design, and gating on top of it added little. Correction lowered forecast-error energy but raised a stylised two-settlement imbalance cost, whereas a deviation-settlement-style charge valued it positively. For Indian control areas, a simple correction refitted on recent errors is the safer default; finer or learned gates need evidence that the structure they exploit persists.",
+  highlights: [
+    "One fixed gate cut State drawal error energy by 13,374 GWh/yr (post-hoc analysis)",
+    "Finer gates added error in 9 of 36 Indian State cases and removed it in 3",
+    "Validation-only gate choice was not confirmed on Indian data (5 of 20 tests)",
+    "Bias correction refitted daily beat learned gates for 4 of 8 all-India forecasts",
+    "Correction value changed sign between stylised and DSM-style settlement rules",
+  ],
+  fullText: {
+    pdf: "/papers/adaptive-forecast-correction.pdf",
+    version: "Preprint · final revision",
+    date: "23 October 2026",
+    note: "Authors' final revised manuscript (with Urvashi Bansal), prepared for Energy Conversion and Management and not yet peer reviewed. The first page is the highlights page the journal asks for.",
+  },
   plain:
     "A forecast can be improved by learning its usual mistakes and adding a correction. The question is how finely that correction should adapt: one setting for everything, or a different one for every region, hour or day. Finer looks smarter but can just chase noise. On India's data, one simple correction was usually as good or better.",
   keyMetrics: [
@@ -385,6 +458,18 @@ export const adaptiveCorrection: Paper = {
     { area: "Reserve planning", text: "A warning: lower error energy did not lower imbalance cost, and the 99% quantiles under-covered." },
   ],
   revisions: [
+    {
+      version: "Second revision",
+      date: "23 October 2026",
+      summary: "Rewritten around the benchmark result: for Indian control areas a simple correction refitted on recent errors is the safer default.",
+      changes: [
+        "Abstract, highlights, results and conclusions now lead with the conventional-correction benchmark; the adaptivity criterion and the pre-registered tests remain the core contribution.",
+        "Theory rewritten: assumptions A0–A4, Propositions 1–6 and their proofs in Appendix A after a full mathematical audit.",
+        "Literature review rewritten with a table of lines of work; 30 new verified references (92 in all).",
+        "Energy and settlement value reported separately: the sign of the imbalance value depends on the settlement rule (stylised two-settlement −469 Rs crore a year, DSM-style buyer rule +186).",
+        "Indian government data sources (Grid-India, CEA, IMD, CERC rules) cited where they are used; layout tightened to remove float-only pages.",
+      ],
+    },
     {
       version: "Revision analyses",
       date: "23 October 2026",

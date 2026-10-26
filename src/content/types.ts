@@ -268,6 +268,18 @@ export interface Revision {
   changes: string[];
 }
 
+/** The full manuscript, served from `public/` and read page by page on the site. */
+export interface FullText {
+  /** Path under `public/`, e.g. "/papers/slug.pdf". */
+  pdf: string;
+  /** Which version this is, e.g. "Submitted version", "Preprint". */
+  version: string;
+  /** When this version was finalised. */
+  date: string;
+  /** One line on what this copy is and what it is not (e.g. not the version of record). */
+  note: string;
+}
+
 export interface Paper extends Story {
   slug: string;
   title: string;
@@ -289,6 +301,10 @@ export interface Paper extends Story {
   abstract?: string;
   /** Why the abstract or full text is not shown, when it is not. */
   disclosure?: string;
+  /** The full manuscript, when it may be shown. */
+  fullText?: FullText;
+  /** Highlights as the manuscript states them, when it has them. */
+  highlights?: string[];
   plain: string;
   keyMetrics: Metric[];
   sections: Section[];

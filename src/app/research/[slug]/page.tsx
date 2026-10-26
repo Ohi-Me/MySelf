@@ -5,6 +5,7 @@ import { MetricGrid } from "@/components/content/MetricGrid";
 import { EvidenceLegend, PaperStatusTag } from "@/components/content/Tags";
 import { PrevNext, RelatedWork } from "@/components/project/Related";
 import { CopyButton } from "@/components/research/CopyButton";
+import { FullTextReader } from "@/components/research/FullTextReader";
 import { ManuscriptSheet, manuscriptToc } from "@/components/research/Manuscript";
 import { AuthorLine } from "@/components/research/PaperList";
 import { Breadcrumbs, Container } from "@/components/site/Page";
@@ -40,7 +41,9 @@ export default async function PaperPage({ params }: PageProps<"/research/[slug]"
   const toc = [
     { id: "summary", title: "In plain English" },
     ...(p.keyMetrics.length ? [{ id: "key-results", title: "Key results" }] : []),
-    { id: "manuscript", title: "Read the paper" },
+    ...(p.highlights ? [{ id: "highlights", title: "Highlights" }] : []),
+    ...(p.fullText ? [{ id: "full-text", title: "Full manuscript" }] : []),
+    { id: "manuscript", title: p.fullText ? "The paper, explained" : "Read the paper" },
     ...manuscriptToc(p).map((t) => ({ ...t, sub: true })),
     { id: "authors", title: "Authors and contribution" },
     ...(p.bibtex ? [{ id: "citation", title: "Citation" }] : []),
@@ -131,10 +134,34 @@ export default async function PaperPage({ params }: PageProps<"/research/[slug]"
               </section>
             )}
 
+            {p.highlights && (
+              <section id="highlights" className="scroll-mt-28">
+                <h2 className="mb-5 text-2xl font-medium tracking-tight text-ink">Highlights</h2>
+                <ol className="grid gap-2.5">
+                  {p.highlights.map((h, i) => (
+                    <li key={h} className="flex gap-4 rounded-xl border border-line bg-surface px-4 py-3" data-reveal>
+                      <span className="font-mono text-[0.75rem] leading-6 text-ink-3">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="text-[0.97rem] leading-relaxed text-ink">{h}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+
+            {p.fullText && (
+              <section id="full-text" className="scroll-mt-28">
+                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                  <h2 className="text-2xl font-medium tracking-tight text-ink">Read the full manuscript</h2>
+                  <p className="text-sm text-ink-3">Every page, on this page</p>
+                </div>
+                <FullTextReader text={p.fullText} title={p.title} />
+              </section>
+            )}
+
             <section id="manuscript" className="scroll-mt-28">
               <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-                <h2 className="text-2xl font-medium tracking-tight text-ink">Read the paper</h2>
-                <p className="text-sm text-ink-3">On this page, no download needed</p>
+                <h2 className="text-2xl font-medium tracking-tight text-ink">{p.fullText ? "The paper, explained" : "Read the paper"}</h2>
+                <p className="text-sm text-ink-3">{p.fullText ? "Pipeline, method, results, impact and revisions" : "On this page, no download needed"}</p>
               </div>
               <ManuscriptSheet paper={p} />
             </section>

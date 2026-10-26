@@ -25,6 +25,14 @@ export const renewableOptimization: Paper = {
     { label: "DOI", href: "https://doi.org/10.11591/ijict.v15i1.pp365-373", kind: "paper" },
   ],
   doi: "10.11591/ijict.v15i1.pp365-373",
+  abstract:
+    "To improve sustainability in power generation, this study presents a thorough data-driven method for maximizing renewable energy sources. It employs measures like capacity utilization factor (CUF) and efficiency to evaluate the performance of solar and wind energy using historical weather and energy-generating data. The study offers practical suggestions for improving renewable energy systems, such as weather-energy correlation analysis and machine learning-based forecasting models. In addition, a comparative analysis is carried out to ascertain which energy source is better, and useful real-world data is provided, including a summary of all India's total renewable energy generation (excluding large hydro) for June 2023 and a performance comparison year over year. A useful, data-driven approach for enhancing renewable energy is provided by this work, which advances the topic of sustainable energy.",
+  fullText: {
+    pdf: "/papers/renewable-energy-optimization.pdf",
+    version: "Version of record",
+    date: "March 2026",
+    note: "The published article, IJ-ICT Vol. 15, No. 1, pp. 365–373. Open access under CC BY-SA 4.0, so it is reproduced here in full.",
+  },
   plain:
     "A data-driven look at how well India's solar and wind capacity is used. The study compares the two sources with the capacity utilisation factor and efficiency, checks how output relates to weather, and tries machine-learning forecasts. In the data studied, wind used its capacity better than solar.",
   keyMetrics: [],

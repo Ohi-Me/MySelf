@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Sparkline } from "@/components/charts/Sparkline";
 import { EvidenceTag, Tag } from "@/components/content/Tags";
 import { Container, PageHeader, SectionHeading } from "@/components/site/Page";
+import { Pipeline } from "@/components/story/Pipeline";
+import { getProject } from "@/content";
 import { platforms, statsFetchedOn } from "@/content/competitive";
 import { codingProfiles, mlCompetitions, profileLinks } from "@/content/site";
 import { pageMetadata } from "@/lib/site";
@@ -51,9 +53,9 @@ export default function CompetitionsPage() {
         }
       />
 
-      <ul className="mb-20 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line lg:grid-cols-4" aria-label="Summary">
+      <ul className="stat-strip mb-20" aria-label="Summary">
         {summary.map((s) => (
-          <li key={s.label} className="flex flex-col gap-3 bg-paper p-5 sm:p-6" data-reveal>
+          <li key={s.label} className="flex flex-col gap-3 px-5 py-6" data-reveal>
             <span className="stat text-[1.9rem] sm:text-[2.3rem]">{s.value}</span>
             <span className="text-[0.85rem] leading-snug text-ink-3">{s.label}</span>
           </li>
@@ -72,30 +74,71 @@ export default function CompetitionsPage() {
             )
           }
         />
-        <ul className="grid gap-4 md:grid-cols-2">
-          {mlCompetitions.map((c) => (
-            <li key={c.name} className="card lift flex flex-col p-5 sm:p-6" data-reveal>
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="eyebrow">{c.host}</p>
-                <div className="flex gap-2">
-                  {c.status === "Completed" && <EvidenceTag kind="leaderboard" />}
-                  <Tag label={c.status} style={c.status === "Completed" ? "filled" : "dotted"} />
+        <ol className="space-y-6">
+          {mlCompetitions.map((c, i) => {
+            const story = c.story ?? (c.href ? getProject(c.href.replace("/projects/", "")) : undefined);
+            return (
+              <li key={c.name} className="comp-story" data-reveal>
+                <div className="comp-head">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-[0.72rem] text-ink-3">{String(i + 1).padStart(2, "0")}</span>
+                    <p className="eyebrow">{c.host}</p>
+                    {c.status === "Completed" && <EvidenceTag kind="leaderboard" />}
+                    <Tag label={c.status} style={c.status === "Completed" ? "filled" : "dotted"} />
+                  </div>
+                  <h3 className="display mt-4 text-[1.7rem] leading-tight text-ink sm:text-[2.1rem]">
+                    {c.href ? (
+                      <Link href={c.href} className="link-quiet">
+                        {c.name}
+                      </Link>
+                    ) : (
+                      c.name
+                    )}
+                  </h3>
+                  <p className="mt-3 font-mono text-[0.9rem] text-ink">{c.result}</p>
+                  <p className="mt-2 max-w-3xl text-[0.95rem] leading-relaxed text-ink-2">{c.detail}</p>
                 </div>
-              </div>
-              <p className="mt-4 text-[1.15rem] leading-snug font-medium text-ink">
-                {c.href ? (
-                  <Link href={c.href} className="link-quiet">
-                    {c.name}
-                  </Link>
-                ) : (
-                  c.name
+                {story && (
+                  <div className="grid gap-6 p-5 sm:p-7">
+                    <Pipeline stages={story.pipeline} label="How it works" caption="Each stage lights up in order as the work moves through it. Hover to pause." />
+                    <div className="grid gap-6 lg:grid-cols-2">
+                      <div>
+                        <p className="eyebrow mb-3">Problems resolved</p>
+                        <ol className="space-y-3">
+                          {story.resolved.slice(0, 3).map((r) => (
+                            <li key={r.issue} className="border-l-2 border-ink pl-4">
+                              <p className="text-[0.88rem] leading-relaxed text-ink-3">{r.issue}</p>
+                              <p className="mt-1 text-[0.92rem] leading-relaxed text-ink">
+                                <span aria-hidden className="mr-1.5">✓</span>
+                                {r.resolution}
+                              </p>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                      <div>
+                        <p className="eyebrow mb-3">Where it applies</p>
+                        <ul className="space-y-3">
+                          {story.impact.slice(0, 3).map((a) => (
+                            <li key={a.area} className="rounded-xl border border-line bg-surface px-4 py-3">
+                              <p className="text-[0.92rem] font-medium text-ink">{a.area}</p>
+                              <p className="mt-1 text-[0.86rem] leading-relaxed text-ink-2">{a.text}</p>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    {c.href && (
+                      <Link href={c.href} className="group inline-flex items-center gap-1.5 justify-self-start text-sm text-ink">
+                        Full case study, with results and evidence <span aria-hidden className="arrow-nudge">→</span>
+                      </Link>
+                    )}
+                  </div>
                 )}
-              </p>
-              <p className="mt-2 font-mono text-[0.85rem] text-ink">{c.result}</p>
-              <p className="mt-3 text-[0.92rem] leading-relaxed text-ink-3">{c.detail}</p>
-            </li>
-          ))}
-        </ul>
+              </li>
+            );
+          })}
+        </ol>
       </section>
 
       <section className="mb-20">

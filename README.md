@@ -4,7 +4,9 @@ A static Next.js site that documents research, projects and results with the evi
 Each project can be read five ways (30-second overview, plain English, engineering, research and evaluation,
 recruiter summary) and every paper states its exact status. Every project and paper also has an animated pipeline,
 the problems it resolved and where it applies in practice, and every paper can be read in place as a manuscript
-sheet with its version history ("What we updated"), on its own page or expanded inline on `/research`.
+sheet with its version history ("What we updated"), on its own page or expanded inline on `/research`. Where the
+full text may be shown, the latest manuscript PDF (in `public/papers/`) is drawn page by page on the paper's page
+with PDF.js. Each ML competition on `/competitions` has the same pipeline, problems resolved and impact.
 
 ## Run it
 
@@ -67,14 +69,18 @@ src/
 scripts/check-site.mjs           crawler used by check:site and check:links
 ```
 
-Design: warm black ink on a family of cream papers (page, lightest-cream sheets, two quiet cream panels and a deep
-cream accent); the dark theme inverts it to cream ink on warm black. Every text pair meets WCAG AA. Distinctions are
+Design: near-black ink on a scale of neutral ivory creams (hue about 48°, no red or brown cast), defined as
+primitives (`--cream-50` … `--cream-600`, `--ink-900` … `--ink-500`) with semantic aliases (`--paper`, `--surface`,
+`--pale`, `--ink`, ...) that components use; the dark theme inverts it to cream ink on neutral black. Every text
+pair meets WCAG AA. The home page avoids box grids: key figures run as a ticker, research themes and the record are
+ruled rows, and featured projects are sheets that stack as you scroll, each with its pipeline. Distinctions are
 encoded by structure (filled, outlined, dashed, dotted), never by hue. Typography: IBM Plex Sans and Plex Mono (self-hosted by
 `next/font`). Motion is CSS only: animated pipelines (a token travels the rail and lights each stage; a container query switches
 them between vertical and horizontal), a reading-progress line on the manuscript sheet, staggered entrances, scroll-driven reveals (`animation-timeline: view()` where
 supported), draw-in diagrams and charts, a sliding tab indicator, and native view transitions between routes
 (project titles morph from card to page). All motion is disabled under `prefers-reduced-motion`, and no content
-waits on JavaScript. The only runtime dependency beyond Next.js and React is KaTeX, which runs at build time.
+waits on JavaScript. Runtime dependencies beyond Next.js and React: KaTeX (runs at build time) and PDF.js
+(`pdfjs-dist`, loaded only when a manuscript reader scrolls into view; the PDF link is the fallback).
 
 ## Adding content
 

@@ -88,7 +88,7 @@ export function CommandPalette({ items }: { items: SearchItem[] }) {
     <dialog
       ref={dialogRef}
       aria-label="Search the site"
-      className="palette mx-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] max-w-none rounded-2xl border border-line-strong bg-paper p-0 text-ink shadow-[0_24px_80px_-20px_rgb(22_18_12/0.35)] backdrop:bg-[#16120c]/45 backdrop:backdrop-blur-[2px]"
+      className="palette mx-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] max-w-none rounded-2xl border border-line-strong bg-paper p-0 text-ink shadow-[0_24px_80px_-20px_rgb(18_18_16/0.35)] backdrop:bg-[#121210]/45 backdrop:backdrop-blur-[2px]"
       onClick={(e) => {
         if (e.target === dialogRef.current) close();
       }}

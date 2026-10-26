@@ -19,6 +19,7 @@ export function manuscriptToc(p: Paper, prefix = "") {
 }
 
 function frameNote(p: Paper): string {
+  if (p.fullText) return "A guided reading of the paper: its pipeline, method, results, the problems it resolves, where it applies and how the manuscript changed. The full text is in the manuscript reader.";
   if (p.status === "published") return "Reader edition of a published paper. The version of record, with its full text and tables, is linked at the end.";
   if (p.status === "dataset") return "Reader edition of a dataset release. The data, code and documentation are linked at the end.";
   return `Reader edition, built from the ${p.abstract ? "submitted abstract" : "public results"} and the public repository. ${p.disclosure ?? ""}`.trim();

@@ -118,7 +118,7 @@ export function ProjectExplorer({ items }: { items: ProjectSummary[] }) {
 
       <h2 className="sr-only">Project list</h2>
       {shown.length ? (
-        <ul className="grid gap-4 md:grid-cols-2">
+        <ul className="border-t border-ink">
           {shown.map((p, i) => (
             <li key={p.slug}>
               <ProjectCard p={p} index={i} />

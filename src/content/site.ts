@@ -3,7 +3,7 @@
  * author's master record (checked 2026-10-24/25), the academic CV, or the
  * public repositories. Ratings are dated because they change.
  */
-import type { ExternalLink } from "./types";
+import type { ExternalLink, Story } from "./types";
 
 export const profile = {
   name: "Rohit Kumar",
@@ -68,6 +68,12 @@ export interface MlCompetition {
   detail: string;
   status: "Completed" | "Ongoing";
   href?: string;
+  /**
+   * Pipeline, problems resolved and where it applies, for a competition with
+   * no project page of its own. A competition with `href` takes these from its
+   * project instead.
+   */
+  story?: Story;
 }
 
 /** Machine-learning competitions, shown on /competitions and /experience. */
@@ -102,6 +108,35 @@ export const mlCompetitions: MlCompetition[] = [
     result: "No final result yet",
     detail: "A coding agent on Gemma 4 served with vLLM. The competition ends on 2 December 2026.",
     status: "Ongoing",
+    story: {
+      pipeline: [
+        { title: "Issue", detail: "A bug report on a private repository, about 5 minutes per task" },
+        { title: "Locate", detail: "AST-symbol BM25 over the repository finds the files to change" },
+        { title: "Scout", detail: "Reads the code and the related tests, read-only" },
+        { title: "Solve ×3", detail: "Three solvers in separate git worktrees, different styles" },
+        { title: "Judge", detail: "Runs the tests, checks for regressions, picks one patch" },
+        { title: "Submit", detail: "The patch is graded against hidden tests" },
+      ],
+      resolved: [
+        {
+          issue: "The competition's graph and embedding tools found the right file in only 34% of tasks (top 10).",
+          resolution: "A symbol-level BM25 locator with directory priors: the right file in the top 10 for 89% of 129 local tasks, from the issue text alone.",
+        },
+        {
+          issue: "The local grader passed 0 of 129 reference patches, so no local score could be trusted.",
+          resolution: "Rebuilt the scorer's environment with per-task dependency pinning: 105 of 129 reference patches now pass, and those form the evaluation set.",
+        },
+        {
+          issue: "One task at a time left about three quarters of the GPUs' batch capacity idle.",
+          resolution: "Measured decoding on 4 × L4, then ran three solvers in parallel for almost no extra wall time.",
+        },
+      ],
+      impact: [
+        { area: "Software maintenance", text: "An agent that proposes a tested patch for a reported bug, within a fixed time and tool budget." },
+        { area: "Open-source maintainers", text: "Triage help: locating the code an issue is about, even when the report names no function." },
+        { area: "On-premise AI", text: "Runs on an open model served locally, so private code never leaves the machine." },
+      ],
+    },
   },
 ];
 

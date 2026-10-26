@@ -155,7 +155,8 @@ export function validateContent(): string[] {
   }
 
   const checkLinks = (owner: string, links: { href: string }[]) => {
-    for (const l of links) if (!/^https:\/\//.test(l.href)) errors.push(`${owner}: link is not https: ${l.href}`);
+    // External links must be https; the only local files linked are manuscripts in public/papers.
+    for (const l of links) if (!/^https:\/\//.test(l.href) && !/^\/papers\/[a-z0-9-]+\.pdf$/.test(l.href)) errors.push(`${owner}: link is not https: ${l.href}`);
   };
 
   const checkSections = (owner: string, sections: Section[], reserved: string[]) => {

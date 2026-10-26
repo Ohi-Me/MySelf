@@ -23,14 +23,19 @@ export const adaptiveRiskAversion: Paper = {
     "Co-author Urvashi Bansal: conceptualization, methodology, supervision, project administration, review and editing.",
   ],
   links: [
+    { label: "Submitted manuscript (PDF)", href: "/papers/adaptive-risk-aversion-scheduling.pdf", kind: "paper" },
     { label: "Code and results", href: REPO, kind: "repo" },
     { label: "Data (Zenodo)", href: "https://doi.org/10.5281/zenodo.23301898", kind: "dataset" },
     { label: "Results guide", href: RESULTS, kind: "doc" },
   ],
   abstract:
     "A State pays for deviating from its day-ahead drawal schedule in either direction. For 34 Indian control areas we compare rules using a calibrated probability forecast of daily drawal: the forecast median, a fixed rule mixing expected regret and conditional value at risk, that rule with uncertainty- and stress-coupled risk, joint scheduling on copula scenarios and a reinforcement-learning policy. For a stylised daily model of the 2024 settlement we prove the expected regret convex, with the best risk-neutral quantile level bounded by the deviation-rate-to-price ratio. On 516 held-out days, as pre-registered, every rule beats repeating the latest recorded schedule in mean regret (fixed rule: 15.80 against 18.54 crore rupees per day), and no adaptive rule passes its test against the fixed rule. In six Eastern-Region areas the regulatory rules reproduce every official 15-minute block charge within 2.5 rupees, whereas the daily model only approximates them; re-scored per block, adaptivity again does not pay, but the forecast median beats the widened fixed rule. A better forecaster lowers mean system regret by 0.29 crore rupees daily. Schedulers should use one quantile tuned to the actual settlement and improve forecasts.",
-  disclosure:
-    "The manuscript is in the journal's review process, so its full text is not posted here. Everything below is either in the abstract or in the public repository's results.",
+  fullText: {
+    pdf: "/papers/adaptive-risk-aversion-scheduling.pdf",
+    version: "Submitted version",
+    date: "19 October 2026",
+    note: "The version submitted to IEEE Transactions on Power Systems, under review. It is not the version of record; if the paper is published, the final version will be linked here.",
+  },
   plain:
     "Indian States are charged when they draw more or less power than they scheduled the day before. This paper asks whether a smarter, adaptive way of setting tomorrow's schedule saves money compared with one simple, well-chosen rule. Tested on 516 days that were never used to build the rules, the simple rule was as good as anything cleverer, including a reinforcement-learning policy. What did lower the cost was a better forecast.",
   keyMetrics: [
