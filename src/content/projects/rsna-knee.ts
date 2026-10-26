@@ -186,5 +186,32 @@ export const rsnaKnee: Project = {
   ],
   lessons: ["Check weak labels against whatever expert labels exist before trusting them.", "A leaderboard tie can hide real progress; a large public-to-private drop can hide overfitting."],
   evidence: [{ label: "Kaggle profile", href: "https://www.kaggle.com/spicyohi13", note: "Final rank. Code and logs are not public." }],
+  pipeline: [
+    { title: "Locate", detail: "Read the 570 GB zip's directory once" },
+    { title: "Stream", detail: "Byte-range reads per series, decoded in memory" },
+    { title: "Cache", detail: "65 GB, 4,407 studies, 0 failures" },
+    { title: "Label", detail: "Qwen3-32B reads 12 findings per report" },
+    { title: "Check", detail: "Against 58 expert labels; site correction" },
+    { title: "Train", detail: "ConvNeXt models, then a Kaggle notebook" },
+  ],
+  resolved: [
+    {
+      issue: "A 570 GB image archive, far more than the available disk.",
+      resolution: "HTTP byte-range reads of the remote zip into a 65 GB cache, with no failed studies.",
+    },
+    {
+      issue: "Only 58 of 4,407 training studies had expert labels.",
+      resolution: "An open LLM read labels from the free-text radiology reports, and every label set was checked against the 58.",
+    },
+    {
+      issue: "Different sites write reports differently, which biased the report labels.",
+      resolution: "A correction for site-specific reporting habits, found by comparing with the expert labels.",
+    },
+  ],
+  impact: [
+    { area: "Radiology departments", text: "Research towards worklist triage for knee MRI. Not a clinical tool." },
+    { area: "Hospitals with unlabelled archives", text: "Labels from existing reports turn years of stored scans into training data." },
+    { area: "Medical AI teams", text: "Out-of-core streaming makes very large imaging datasets usable on modest hardware." },
+  ],
   related: ["arc-agi-inference", "amazon-ml-entity-resolution"],
 };

@@ -152,5 +152,32 @@ export const arcInference: Project = {
   limitations: ["No public code.", "Offline evaluation is optimistic for the baseline model.", "Competition result not final."],
   lessons: ["Measure where the time goes before optimising.", "On a fixed budget, speed is accuracy."],
   evidence: [{ label: "Private run logs", note: "Code and logs are not public; numbers are from the project's progress log." }],
+  pipeline: [
+    { title: "Task", detail: "One ARC puzzle under a hard time budget" },
+    { title: "Adapt", detail: "Per-task LoRA, about 69 s" },
+    { title: "Batch", detail: "Same-length views share one search batch" },
+    { title: "Trim", detail: "Output layer only at answer positions" },
+    { title: "Cap", detail: "Batch tokens capped to fit a 24 GB GPU" },
+    { title: "Budget", detail: "Adaptive per-task budget under a deadline" },
+  ],
+  resolved: [
+    {
+      issue: "Decoding and re-scoring took about 75% of the time, and more decoding meant more accuracy.",
+      resolution: "Shared search batches and answer-only output layers: decoding about −26%, mean time per task 274 → 222 s.",
+    },
+    {
+      issue: "Peak memory near the limit of a 24 GB GPU.",
+      resolution: "A cap on batch tokens: peak memory 23.2 → 19.2 GB.",
+    },
+    {
+      issue: "A fixed per-task budget wastes time on easy tasks and runs out on hard ones.",
+      resolution: "An adaptive budget, tested by replaying a simulated deadline before use.",
+    },
+  ],
+  impact: [
+    { area: "LLM serving", text: "Less GPU time per answer for search-style decoding, which lowers serving cost." },
+    { area: "Fixed-budget compute", text: "On a fixed budget, speed becomes accuracy: the same hardware can try more candidates." },
+    { area: "Smaller GPUs", text: "Memory caps let larger batches run on 24 GB cards instead of data-centre GPUs." },
+  ],
   related: ["rsna-knee", "amazon-ml-entity-resolution"],
 };

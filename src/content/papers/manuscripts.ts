@@ -103,6 +103,57 @@ export const publicationDelay: Paper = {
       ],
     },
   ],
+  pipeline: [
+    { title: "Reports", detail: "Grid-India, CEA, IMD and price files" },
+    { title: "Lag", detail: "Each source's measured availability: 1, 2 or 14 days" },
+    { title: "Issue", detail: "Forecast made at 12:00 on day t−1" },
+    { title: "Model", detail: "Thirteen forecasters, combined per target" },
+    { title: "Calibrate", detail: "Split-conformal 80% and 90% intervals" },
+    { title: "Score", detail: "Once, on 17 months, 34 control areas" },
+  ],
+  resolved: [
+    {
+      issue: "Forecasts of Indian State power data quietly assume every report is available the next morning.",
+      resolution: "Every input is used only after its measured publication delay, which makes the forecasts ones an operator could actually issue.",
+    },
+    {
+      issue: "The cost of that delay had never been measured.",
+      resolution: "The same models with and without real lags: delay raises scaled error by 15.1% (drawal) to 137.7% (price).",
+    },
+    {
+      issue: "Prediction intervals are often reported without checking their coverage.",
+      resolution: "Split-conformal calibration: coverage within five points of nominal on every target.",
+    },
+  ],
+  impact: [
+    { area: "Load forecasting desks", text: "Day-ahead demand and drawal forecasts that beat the seasonal naive baseline (MASE 0.892 and 0.922) using only data that is really available." },
+    { area: "Renewable and conventional plants", text: "Next-day generation forecasts with calibrated intervals for scheduling units and fuel." },
+    { area: "Power exchanges and traders", text: "Day-ahead price forecast with MASE 0.741 against 1.027 for the baseline." },
+    { area: "Data-publishing agencies", text: "A measured case for publishing faster: late reports raise forecast error by 15% to 138%." },
+  ],
+  revisions: [
+    {
+      version: "Manuscript complete",
+      date: "October 2026",
+      summary: "Prepared for Applied Energy; not yet submitted.",
+      changes: [
+        "Final forecaster fixed per target on a calibration year: stacked weights for demand and drawal, an equal-weight average of the best few models for conventional generation and price, Chronos-2 alone for renewables.",
+        "Adds the analysis run after scoring, labelled as such: the settlement value of drawal accuracy across 16 forecasters.",
+      ],
+    },
+    {
+      version: "Second confirmatory round",
+      date: "September 2026",
+      summary: "The final per-target combinations were built on top of the first-round models and scored on the same held-out period.",
+      changes: ["Both rounds are kept in the repository so the gain of the combination step can be checked."],
+    },
+    {
+      version: "Pre-registration",
+      date: "18 September 2026",
+      summary: "Every choice frozen and hashed before the 17-month evaluation period was opened.",
+      changes: ["20 accuracy, calibration and delay-cost checks in family F1; all 20 supported."],
+    },
+  ],
   related: ["re-fused", "india-state-day-panel", "adaptive-risk-aversion-scheduling"],
   topics: ["Time-series forecasting", "Data latency", "Calibration", "Power systems"],
 };
@@ -177,6 +228,52 @@ export const stateDayPanel: Paper = {
           ],
         },
       ],
+    },
+  ],
+  pipeline: [
+    { title: "Acquire", detail: "18,233 official report files" },
+    { title: "Manifest", detail: "URL, retrieval time, size and SHA-256 per file" },
+    { title: "Parse", detail: "Per-source parsers for changing layouts" },
+    { title: "Validate", detail: "QC report; missing values counted, never imputed" },
+    { title: "Panel", detail: "104,550 State-days × 107 columns" },
+    { title: "Rebuild", detail: "Reproduces the recorded content hash" },
+  ],
+  resolved: [
+    {
+      issue: "India's daily power data is spread across thousands of report files from several agencies, in layouts that change over time.",
+      resolution: "One table, built deterministically from official files only, with one row per State control area per day.",
+    },
+    {
+      issue: "The agencies give no open licence to copy their files.",
+      resolution: "The files are not redistributed; manifests record each file's URL and hash, and scripts download and verify them again.",
+    },
+    {
+      issue: "Forecasting studies cannot tell when each value became public.",
+      resolution: "Every column records its measured publication delay in a field registry.",
+    },
+    {
+      issue: "Early versions mixed in data from aggregator websites.",
+      resolution: "Rebuilt from Grid-India, CEA and IMD publications only.",
+    },
+  ],
+  impact: [
+    { area: "Energy researchers", text: "A CC BY 4.0 panel for forecasting, scheduling and policy studies, with provenance down to the source file." },
+    { area: "Utilities and planners", text: "Eight years of State-level demand, generation, price and weather in one place." },
+    { area: "Policy analysts", text: "Renewables, carbon and system stress by State over time, traceable to official reports." },
+    { area: "Teaching", text: "A real, documented dataset for courses on power systems and time series." },
+  ],
+  revisions: [
+    {
+      version: "v1.1 prepared",
+      date: "October 2026",
+      summary: "Adds CEA's daily renewable reports from its new portal (gen-re.cea.gov.in), from 19 November 2025.",
+      changes: ["Everything else is identical to version 1.0; validation and the QC report are re-run for 1.1."],
+    },
+    {
+      version: "v1.0.0 published",
+      date: "October 2026",
+      summary: "Panel, code and documentation released on Zenodo (DOI 10.5281/zenodo.23301898).",
+      changes: ["Data descriptor prepared for Scientific Data; not yet submitted."],
     },
   ],
   related: ["re-fused-dataset", "re-fused", "publication-delay-forecasting"],
@@ -257,6 +354,61 @@ export const adaptiveCorrection: Paper = {
           text: "The validation rules that worked on the comparison data did not transfer to India's all-India series, while the energy effect and the missing cost effect did.",
         },
       ],
+    },
+  ],
+  pipeline: [
+    { title: "Base", detail: "Any day-ahead forecast B" },
+    { title: "Learn", detail: "Correction r from B's own past errors, up to day D−2" },
+    { title: "Gate", detail: "g: one number, or per series, hour, instance or day" },
+    { title: "Select", detail: "PART or prequential rule, validation data only" },
+    { title: "Correct", detail: "B + g · r" },
+    { title: "Value", detail: "Deviation energy, reserve and imbalance cost" },
+  ],
+  resolved: [
+    {
+      issue: "A finer, more adaptive correction looks smarter but can just chase noise.",
+      resolution: "A pre-registered ladder from one gate to one per series, hour, instance or day: on India's data one simple gate was usually as good or better.",
+    },
+    {
+      issue: "Validation rules that choose the level of adaptivity worked on other countries' data.",
+      resolution: "Tested on India and reported as a negative result: PART did not predict when a finer gate helps (0.625, Holm p = 0.43).",
+    },
+    {
+      issue: "Error metrics alone hide the money.",
+      resolution: "Energy and cost reported side by side: 5,742 GWh a year less deviation energy, yet a stylised imbalance cost 469 Rs crore a year higher.",
+    },
+  ],
+  impact: [
+    { area: "Grid operators", text: "One fixed gate removed 13,374 GWh a year of drawal forecast error across 34 areas in the additional analysis." },
+    { area: "Forecast providers", text: "Correction helps weak forecasts most; for strong deep models it adds almost nothing." },
+    { area: "Power traders", text: "For prices a fixed gate hurts and a gate re-learned over time helps." },
+    { area: "Reserve planning", text: "A warning: lower error energy did not lower imbalance cost, and the 99% quantiles under-covered." },
+  ],
+  revisions: [
+    {
+      version: "Revision analyses",
+      date: "23 October 2026",
+      summary: "Exploratory checks for the Energy Conversion and Management manuscript, with every setting written down before any was run.",
+      changes: [
+        "Conventional residual corrections as benchmarks (hour-of-day and hour-of-week means, EWMA, an autoregressive remainder, linear error regression).",
+        "An error-aware corrector, a LightGBM base forecast refitted every month, and a rolling-origin check of the selection rules.",
+        "A bootstrap sensitivity check of the gate-energy valuation on the State panel.",
+        "All are labelled exploratory; none changes a pre-registered verdict.",
+      ],
+    },
+    {
+      version: "Confirmatory run",
+      date: "6 October 2026",
+      summary: "All-India hourly study scored once (H100 job 34223) after the plan was frozen (tag prereg-india-v1).",
+      changes: [
+        "Thread and core limits changed after the cluster stopped three attempts within 35 seconds, before any forecast was written; listed as deviations D1–D3.",
+      ],
+    },
+    {
+      version: "Comparison data",
+      date: "Before October 2026",
+      summary: "The same method, pre-registered earlier, tested on NYISO, European and UCI data: 19 of 23 tests supported.",
+      changes: ["Kept as the comparison that shows what did and did not transfer to India."],
     },
   ],
   related: ["re-fused", "publication-delay-forecasting"],

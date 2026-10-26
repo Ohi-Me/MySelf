@@ -386,5 +386,37 @@ export const amazonMl: Project = {
     { label: "Submissions and scores", href: SUBS, note: "Leaderboard score of each submitted system." },
     { label: "Repository", href: REPO, note: "Code, reports and run logs." },
   ],
+  pipeline: [
+    { title: "Normalise", detail: "Transliteration, legal forms, OCR fixes, states" },
+    { title: "Retrieve", detail: "TF-IDF and bi-encoder GPU top-k, blocked per country" },
+    { title: "Classify", detail: "XGBoost on about 100 pair features" },
+    { title: "Re-rank", detail: "Multilingual cross-encoders on uncertain pairs only" },
+    { title: "Vote", detail: "An entity's other records add evidence" },
+    { title: "Decode", detail: "Calibrated, expected-F0.5 choice per entity" },
+  ],
+  resolved: [
+    {
+      issue: "Names transliterated into Indic scripts, legal forms swapped, addresses reordered or empty.",
+      resolution: "A normalisation stage with learned transliteration, legal-form and OCR corrections before any matching.",
+    },
+    {
+      issue: "Comparing 1.73 million references with about 10 million records pair by pair is out of reach.",
+      resolution: "Recall-first blocking per country with two GPU retrievers: about 85 million candidate pairs at recall 0.988.",
+    },
+    {
+      issue: "The best validation system scored worse on the leaderboard.",
+      resolution: "Diagnosed a density shift (the US test set was half as crowded as training) and retrained at the test's density.",
+    },
+    {
+      issue: "About 40% of test records match nothing, so a forced match costs precision.",
+      resolution: "Isotonic calibration turns scores into probabilities, and the decoder keeps only the set of records with the highest expected F0.5.",
+    },
+  ],
+  impact: [
+    { area: "E-commerce and marketplaces", text: "Merging duplicate sellers and catalogue listings written in different scripts and formats." },
+    { area: "Banking and KYC", text: "Linking one customer or business across onboarding, payments and compliance records." },
+    { area: "Government registries", text: "Joining business records across tax, company and licensing databases that never shared an identifier." },
+    { area: "Supply chains", text: "Cleaning supplier master data so spend and risk roll up to the right company." },
+  ],
   related: ["re-fused", "assessiq"],
 };

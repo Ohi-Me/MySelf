@@ -201,5 +201,37 @@ export const datasentry: Project = {
   ],
   lessons: ["A gate that only ever reports success is not a gate.", "Report the mean over seeds with its spread; a single run is an anecdote."],
   evidence: [{ label: "Repository README and BENCHMARKS.md", href: REPO, note: "Every number above, with run-by-run history." }],
+  pipeline: [
+    { title: "Observe", detail: "Warehouse writes, query history, dbt, GitHub" },
+    { title: "Profile", detail: "Sketches and column-level lineage" },
+    { title: "Detect", detail: "Seven detector families, conformal thresholds" },
+    { title: "Explain", detail: "Reasoner must cite stored evidence" },
+    { title: "Gate", detail: "Closed action set; low risk auto, rest to a person" },
+    { title: "Verify", detail: "Close or escalate, never on a timer" },
+  ],
+  resolved: [
+    {
+      issue: "Silent semantic regressions: a unit change, an INNER join turned LEFT, a dedup key change. Pipelines stay green while dashboards are wrong.",
+      resolution: "Seven detector families with one split-conformal calibration; observed false-positive rate 0.0104 against a 0.01 target.",
+    },
+    {
+      issue: "Root cause takes hours of tracing lineage by hand.",
+      resolution: "A purpose-built SQL reader gives column-level lineage (98.2% column-map coverage), and a semantic diff turns code changes into evidence.",
+    },
+    {
+      issue: "An LLM explanation can invent a cause.",
+      resolution: "Every claim must cite stored evidence; the hallucination rate was 0.000 over three seeded worlds.",
+    },
+    {
+      issue: "Automatic fixes can do more harm than the incident.",
+      resolution: "A policy gate with a closed action set: only low-risk actions run on their own, the rest wait in an approval tray.",
+    },
+  ],
+  impact: [
+    { area: "Data platform teams", text: "Fewer hours lost to silent breaks, with a cited explanation of each incident." },
+    { area: "Finance and BI reporting", text: "Catching a wrong dashboard before a decision is made on it." },
+    { area: "E-commerce analytics", text: "Join and dedup changes that inflate orders or revenue are flagged at the source." },
+    { area: "Regulated industries", text: "An audit trail of what was detected, why and who approved the fix." },
+  ],
   related: ["orbit", "caringu"],
 };

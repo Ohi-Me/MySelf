@@ -8,6 +8,8 @@ import { EvidenceLegend, ProjectStatusTag } from "@/components/content/Tags";
 import { PrevNext, RelatedWork } from "@/components/project/Related";
 import { ReadingModes, type ModeDef } from "@/components/project/ReadingModes";
 import { Breadcrumbs, Container } from "@/components/site/Page";
+import { Pipeline } from "@/components/story/Pipeline";
+import { ImpactGrid, ResolvedList } from "@/components/story/StoryPanels";
 import { getProject, projects } from "@/content";
 import type { Project } from "@/content/types";
 import { absoluteUrl, jsonLd, pageMetadata, projectKindLabel } from "@/lib/site";
@@ -159,6 +161,13 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           </dl>
         </header>
 
+        <section id="pipeline" className="mb-16 scroll-mt-28" aria-labelledby="pipeline-title">
+          <h2 id="pipeline-title" className="mb-5 text-2xl font-medium tracking-tight text-ink">
+            How it works
+          </h2>
+          <Pipeline stages={p.pipeline} caption="Each stage lights up in order as the work moves through it. Hover to pause." />
+        </section>
+
         <ReadingModes modes={modesFor(p)}>
           <Panel id="overview" title="30-second overview">
             <section id="overview" className="scroll-mt-36">
@@ -267,7 +276,19 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           </Panel>
         </ReadingModes>
 
-        <section id="evidence" className="mt-24 scroll-mt-28">
+        <section id="resolved" className="mt-24 scroll-mt-28">
+          <h2 className="mb-2 text-2xl font-medium tracking-tight text-ink">Problems resolved</h2>
+          <p className="mb-6 text-[0.95rem] text-ink-3">What got in the way, and what was done about it.</p>
+          <ResolvedList items={p.resolved} />
+        </section>
+
+        <section id="impact" className="mt-20 scroll-mt-28">
+          <h2 className="mb-2 text-2xl font-medium tracking-tight text-ink">Where it applies</h2>
+          <p className="mb-6 text-[0.95rem] text-ink-3">People, industries and operators the work could help in practice.</p>
+          <ImpactGrid items={p.impact} />
+        </section>
+
+        <section id="evidence" className="mt-20 scroll-mt-28">
           <h2 className="mb-6 text-2xl font-medium tracking-tight text-ink">Evidence and sources</h2>
           <ul className="divide-y divide-line rounded-2xl border border-line">
             {p.evidence.map((e, i) => (

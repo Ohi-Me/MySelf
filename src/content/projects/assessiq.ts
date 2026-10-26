@@ -63,7 +63,7 @@ export const assessiq: Project = {
 
   engineering: [
     {
-      id: "pipeline",
+      id: "processing",
       title: "Pipeline",
       blocks: [
         { type: "diagram", id: "assessiq-pipeline", caption: "Every response passes the validator last; invalid entries are dropped and results are capped at 10." },
@@ -126,5 +126,32 @@ export const assessiq: Project = {
   limitations: ["31-entry catalog and a 20-query evaluation set labelled by the developer.", "Generation quality is not measured."],
   lessons: ["Make grounding a code check, not a prompt request."],
   evidence: [{ label: "Repository README", href: REPO, note: "Architecture, evaluation and latency benchmark." }],
+  pipeline: [
+    { title: "Ask", detail: "A hiring need in plain English" },
+    { title: "Guard", detail: "Intent check; blocks injection and off-topic" },
+    { title: "Clarify", detail: "Asks for the one missing signal" },
+    { title: "Retrieve", detail: "BM25 + FAISS, reciprocal rank fusion" },
+    { title: "Recommend", detail: "LLM picks with a reason per item" },
+    { title: "Validate", detail: "Only real catalog entries, at most 10" },
+  ],
+  resolved: [
+    {
+      issue: "A chat model recommends assessments that do not exist.",
+      resolution: "A validator checks every recommendation against the catalog's real URLs, in code rather than in the prompt.",
+    },
+    {
+      issue: "Prompt injection and off-topic requests.",
+      resolution: "An intent guardrail before retrieval.",
+    },
+    {
+      issue: "A vague request returns vague results.",
+      resolution: "The agent asks for the one missing signal (role, seniority or skill focus) before searching.",
+    },
+  ],
+  impact: [
+    { area: "HR and talent teams", text: "Choosing an assessment in a short conversation instead of browsing a catalog." },
+    { area: "Recruitment agencies", text: "Consistent, explained picks for each role." },
+    { area: "Any catalog business", text: "The grounding pattern prevents recommending products that do not exist." },
+  ],
   related: ["feelfit", "amazon-ml-entity-resolution"],
 };

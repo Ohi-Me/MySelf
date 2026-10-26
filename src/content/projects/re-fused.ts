@@ -644,5 +644,49 @@ export const refused: Project = {
     { label: "Blinding guard", href: `${REPO}/blob/main/India_Grid_Study/codes/refused/guard.py`, note: "Code that locks the evaluation period." },
     { label: "Zenodo record", href: "https://doi.org/10.5281/zenodo.23301898", note: "Panel, code and frozen results, version 1.0.0." },
   ],
+  pipeline: [
+    { title: "Collect", detail: "18,233 official Grid-India, CEA and IMD files, each hashed" },
+    { title: "Build", detail: "State-day panel, 104,550 × 107, rebuild hash-checked" },
+    { title: "Lag", detail: "Each source enters only after its measured publication delay" },
+    { title: "Forecast", detail: "Five targets, combined per target, conformal 80% and 90% intervals" },
+    { title: "Decide", detail: "Schedule set at one tuned quantile of the forecast" },
+    { title: "Score", detail: "Settlement regret on 516 held-out days, pre-registered" },
+  ],
+  resolved: [
+    {
+      issue: "An audit of the early panel found 98.2% of test-period market prices carried forward from an earlier day, so price skill could not be measured.",
+      resolution: "Rebuilt every column from official reports only; each value traces to a source file with its URL, retrieval time and SHA-256.",
+    },
+    {
+      issue: "Forecasting studies usually assume yesterday's reports are available today, which leaks information the operator does not have.",
+      resolution: "Each input is used only after its measured availability lag (1 to 14 days), and a leakage test guards the rule.",
+    },
+    {
+      issue: "A 22.5% volatility reduction turned out to be one seed; the same code gave −7.7% in the next release.",
+      resolution: "Single-seed claims were dropped, the PPO baseline runs 5 seeds, and every choice was frozen in a hashed pre-registration before scoring.",
+    },
+    {
+      issue: "Thousands of reports whose layouts change over eight years.",
+      resolution: "Per-source parsers with manifests and a deterministic build whose content hash a rebuild reproduces exactly.",
+    },
+  ],
+  impact: [
+    {
+      area: "State load dispatch centres",
+      text: "A day-ahead drawal schedule from a calibrated forecast and one tuned quantile. Under the stylised settlement, mean regret fell from 18.54 to 15.80 Rs crore per day across 34 areas.",
+    },
+    {
+      area: "Power plants and generators",
+      text: "Next-day forecasts of conventional and renewable generation with calibrated intervals, the inputs for unit commitment and fuel planning.",
+    },
+    {
+      area: "Regulators and settlement",
+      text: "The settlement rules reproduce official 15-minute charges within Rs 2.5, so the effect of a rule change on what States pay can be tested before it is adopted.",
+    },
+    {
+      area: "Researchers and analysts",
+      text: "An open CC BY panel of India's power system with publication delays recorded per column.",
+    },
+  ],
   related: ["adaptive-risk-aversion-scheduling", "publication-delay-forecasting", "india-state-day-panel", "adaptive-forecast-correction"],
 };

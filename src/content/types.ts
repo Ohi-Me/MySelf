@@ -125,6 +125,39 @@ export interface Section {
 }
 
 /* ------------------------------------------------------------------ */
+/* Pipeline, problems solved and where the work applies                 */
+/* ------------------------------------------------------------------ */
+
+/** One stage of the animated pipeline shown at the top of every project and paper. */
+export interface PipelineStage {
+  title: string;
+  /** One short line: what happens at this stage. */
+  detail: string;
+}
+
+/** A concrete problem the work ran into or set out to fix, and how it was fixed. */
+export interface ResolvedIssue {
+  issue: string;
+  resolution: string;
+}
+
+/**
+ * Where the work could matter outside the project: an industry, an operator or
+ * a person. Written as potential use, never as a deployment that did not happen.
+ */
+export interface ImpactArea {
+  area: string;
+  text: string;
+}
+
+/** The parts every project and paper shares beyond its own content. */
+export interface Story {
+  pipeline: PipelineStage[];
+  resolved: ResolvedIssue[];
+  impact: ImpactArea[];
+}
+
+/* ------------------------------------------------------------------ */
 /* Links                                                                */
 /* ------------------------------------------------------------------ */
 
@@ -151,7 +184,7 @@ export type ProjectStatus =
 
 export type ProjectKind = "research" | "competition" | "system" | "product";
 
-export interface Project {
+export interface Project extends Story {
   slug: string;
   title: string;
   /** One line under the title. */
@@ -226,7 +259,16 @@ export interface Author {
   affiliation?: string;
 }
 
-export interface Paper {
+/** One entry in a paper's version history: what changed in the manuscript, and when. */
+export interface Revision {
+  /** Short label, e.g. "Submitted", "v1.1 prepared". */
+  version: string;
+  date: string;
+  summary: string;
+  changes: string[];
+}
+
+export interface Paper extends Story {
   slug: string;
   title: string;
   /** Short name for cards and breadcrumbs. */
@@ -250,6 +292,8 @@ export interface Paper {
   plain: string;
   keyMetrics: Metric[];
   sections: Section[];
+  /** Version history of the manuscript, newest first. */
+  revisions: Revision[];
   /** BibTeX for published items only. */
   bibtex?: string;
   related: string[];

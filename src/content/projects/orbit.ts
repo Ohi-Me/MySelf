@@ -292,5 +292,37 @@ export const orbit: Project = {
     { label: "Leakage tests", href: LEAK, note: "The 14 tests described above." },
     { label: "Live app", href: "https://orbit-web-jet.vercel.app", note: "Checked responding on 25 Oct 2026." },
   ],
+  pipeline: [
+    { title: "Plan", detail: "A question becomes a structured research plan" },
+    { title: "Data", detail: "Prices, point-in-time filings, macro, news, documents" },
+    { title: "Research", detail: "Factor panel and purged walk-forward ML" },
+    { title: "Backtest", detail: "The model's own predictions, with costs" },
+    { title: "Critic", detail: "Leakage, purge and coverage checks; one revision" },
+    { title: "Approve", detail: "A person signs off; nothing trades" },
+  ],
+  resolved: [
+    {
+      issue: "Future information leaks into features and makes a model look better than it is.",
+      resolution: "Point-in-time fundamentals and 14 leakage tests in CI.",
+    },
+    {
+      issue: "Cross-validation folds that overlap the label horizon.",
+      resolution: "Purged and embargoed walk-forward validation.",
+    },
+    {
+      issue: "A model is validated, but a different hand-built strategy is backtested.",
+      resolution: "Out-of-sample model predictions feed the backtest directly.",
+    },
+    {
+      issue: "One unreachable data source stops a long multi-agent run.",
+      resolution: "Every step runs through one wrapper that records ok, degraded or failed, and enrichment steps may degrade instead of failing.",
+    },
+  ],
+  impact: [
+    { area: "Asset managers and research desks", text: "A research loop that rejects leaky results before anyone acts on them." },
+    { area: "Risk and compliance", text: "Each run leaves a record of data, checks and the human decision, which a reviewer can audit." },
+    { area: "Fintech teams", text: "A template for keeping multi-agent pipelines running when a data provider fails." },
+    { area: "Teaching quantitative finance", text: "Shows the common ways financial ML fools its authors, with tests for each." },
+  ],
   related: ["datasentry", "feelfit", "caringu"],
 };

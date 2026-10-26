@@ -94,7 +94,7 @@ export const feelfit: Project = {
 
   engineering: [
     {
-      id: "pipeline",
+      id: "processing",
       title: "The analysis pipeline",
       blocks: [
         { type: "diagram", id: "feelfit-pipeline", caption: "From upload to response. The two validation stages are where unsafe output is rejected." },
@@ -252,6 +252,38 @@ class AnalysisOutput(BaseModel):
     { label: "Response schema", href: SCHEMA, note: "Blocked phrases and consistency validators." },
     { label: "Retrieval layers", href: LAYERS, note: "The five layers and their sources." },
     { label: "Live app", href: "https://feelfit.vercel.app", note: "Checked responding on 25 Oct 2026." },
+  ],
+  pipeline: [
+    { title: "Upload", detail: "PDF, phone photo or CSV" },
+    { title: "Extract", detail: "pdfplumber or Tesseract OCR, content-hash cache" },
+    { title: "Map", detail: "Test names to LOINC codes, ranges and profile" },
+    { title: "Interpret", detail: "LLM over retrieved evidence, with citations" },
+    { title: "Guard", detail: "Schema and banned-phrase validation" },
+    { title: "Respond", detail: "Structured answer with a confidence score" },
+  ],
+  resolved: [
+    {
+      issue: "The same test is written under different names by different labs.",
+      resolution: "Mapping to LOINC codes, so values compare across reports.",
+    },
+    {
+      issue: "Reports arrive as photos and scanned PDFs, not text.",
+      resolution: "Text extraction with an OCR fallback, and a content-hash cache so a repeated upload is not processed twice.",
+    },
+    {
+      issue: "A model answer can read like a diagnosis or a prescription.",
+      resolution: "The response schema and a banned-phrase list reject such answers in code; any risk statement must cite evidence.",
+    },
+    {
+      issue: "Answers from model memory alone cannot be checked.",
+      resolution: "A retrieval engine over five evidence layers returns citations and a confidence score with every answer.",
+    },
+  ],
+  impact: [
+    { area: "Patients and families", text: "Understanding a lab report in plain words before or after a doctor's visit. Health information only, not a diagnosis." },
+    { area: "Diagnostic labs", text: "Plain-language summaries sent alongside the report itself." },
+    { area: "Telehealth and clinics", text: "A structured summary of past reports ready before a consultation." },
+    { area: "Health-record apps", text: "LOINC-coded values from scanned reports, so records from different labs line up." },
   ],
   related: ["caringu", "orbit", "assessiq"],
 };
