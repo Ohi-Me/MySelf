@@ -1,69 +1,169 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Tag } from "@/components/content/Tags";
+import { HeroSchematic } from "@/components/home/HeroSchematic";
+import { ProjectCard, toSummary } from "@/components/project/ProjectCard";
+import { PaperRow } from "@/components/research/PaperList";
+import { Container, SectionHeading } from "@/components/site/Page";
+import { papers, projects } from "@/content";
+import { achievements, profile, profileLinks, researchThemes } from "@/content/site";
+import { absoluteUrl, jsonLd } from "@/lib/site";
+
+const kindStyle = { leaderboard: "dashed", reported: "muted", "held-out": "filled", measured: "outline" } as const;
+const kindLabel = { leaderboard: "Leaderboard", reported: "Reported", "held-out": "Held-out test", measured: "Measured" } as const;
 
 export default function Home() {
+  const featured = projects.filter((p) => p.featured);
+  const person = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: profile.name,
+    url: absoluteUrl("/"),
+    email: `mailto:${profile.email}`,
+    jobTitle: profile.role,
+    description: profile.description,
+    affiliation: { "@type": "CollegeOrUniversity", name: "Dr B R Ambedkar National Institute of Technology Jalandhar" },
+    alumniOf: { "@type": "CollegeOrUniversity", name: "IIIT Bhubaneswar" },
+    identifier: `https://orcid.org/${profile.orcid}`,
+    sameAs: profileLinks.filter((l) => l.kind === "profile").map((l) => l.href),
+    knowsAbout: ["Machine learning", "Probabilistic forecasting", "Entity resolution", "LLM agents", "Power systems"],
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
+
+      <Container>
+        <section className="grid items-center gap-12 pt-14 pb-20 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pb-28">
+          <div>
+            <p className="eyebrow enter" style={{ ["--i" as string]: 0 }}>
+              {profile.affiliation} · 2025 – 2027
+            </p>
+            <h1 className="enter mt-5 text-[2.7rem] leading-[1.02] font-medium tracking-[-0.035em] text-ink sm:text-[4rem]" style={{ ["--i" as string]: 1 }}>
+              Rohit Kumar
+            </h1>
+            <p className="enter mt-6 max-w-xl text-[1.15rem] leading-relaxed text-ink-2 sm:text-[1.25rem]" style={{ ["--i" as string]: 2 }}>
+              {profile.statement}
+            </p>
+            <div className="enter mt-9 flex flex-wrap gap-3" style={{ ["--i" as string]: 3 }}>
+              <Link href="/research" className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[0.92rem] text-paper">
+                Read the research <span aria-hidden className="arrow-nudge">→</span>
+              </Link>
+              <Link
+                href="/projects"
+                className="group inline-flex items-center gap-2 rounded-full border border-ink px-5 py-2.5 text-[0.92rem] text-ink transition-colors hover:bg-pale"
+              >
+                See the projects <span aria-hidden className="arrow-nudge">→</span>
+              </Link>
+              <Link href="/contact" className="inline-flex items-center rounded-full px-3 py-2.5 text-[0.92rem] text-ink-2 hover:text-ink">
+                Contact and CV
+              </Link>
+            </div>
+          </div>
+          <div className="enter" style={{ ["--i" as string]: 2 }}>
+            <HeroSchematic />
+          </div>
+        </section>
+      </Container>
+
+      <section className="border-y border-line bg-pale/60 py-16 sm:py-20">
+        <Container>
+          <SectionHeading eyebrow="Record" title="Results, with the kind of evidence behind each" />
+          <ul className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+            {achievements.slice(0, 5).map((a) => (
+              <li key={a.title} className="bg-paper p-5 sm:p-6" data-reveal>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-mono text-[0.72rem] text-ink-3">{a.date}</span>
+                  <Tag label={kindLabel[a.kind]} style={kindStyle[a.kind]} />
+                </div>
+                <p className="mt-4 font-medium text-ink">
+                  {a.href ? (
+                    a.href.startsWith("/") ? (
+                      <Link href={a.href} className="link-quiet">
+                        {a.title}
+                      </Link>
+                    ) : (
+                      <a href={a.href} target="_blank" rel="noopener noreferrer" className="link-quiet">
+                        {a.title}
+                      </a>
+                    )
+                  ) : (
+                    a.title
+                  )}
+                </p>
+                <p className="mt-2 text-[0.9rem] leading-relaxed text-ink-3">{a.detail}</p>
+              </li>
+            ))}
+            <li className="flex flex-col justify-between bg-ink p-5 text-paper sm:p-6" data-reveal>
+              <p className="eyebrow !text-paper/60">Also</p>
+              <p className="mt-4 text-[0.95rem] leading-relaxed">
+                Co-wrote a 36-month research proposal submitted to the Central Power Research Institute (decision pending), and co-authored two publications during the B.Tech.
+              </p>
+              <Link href="/experience" className="group mt-5 inline-flex items-center gap-1.5 text-sm">
+                Full record <span aria-hidden className="arrow-nudge">→</span>
+              </Link>
+            </li>
+          </ul>
+        </Container>
+      </section>
+
+      <Container className="py-20 sm:py-28">
+        <SectionHeading
+          eyebrow="What I research"
+          title="Forecasts that hold up under real data, and decisions that use them"
+          action={
+            <Link href="/research" className="link-quiet text-sm text-ink">
+              All research →
+            </Link>
+          }
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        <ol className="grid gap-4 md:grid-cols-3">
+          {researchThemes.map((t, i) => (
+            <li key={t.href}>
+              <Link href={t.href} className="lift flex h-full flex-col rounded-2xl border border-line p-6" data-reveal>
+                <span className="font-mono text-[0.72rem] text-ink-3">0{i + 1}</span>
+                <span className="mt-4 text-[1.1rem] leading-snug font-medium text-ink">{t.title}</span>
+                <span className="mt-3 text-[0.92rem] leading-relaxed text-ink-2">{t.text}</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </Container>
+
+      <Container className="pb-20 sm:pb-28">
+        <SectionHeading
+          eyebrow="What I build"
+          title="Selected projects"
+          action={
+            <Link href="/projects" className="link-quiet text-sm text-ink">
+              All {projects.length} projects →
+            </Link>
+          }
+        />
+        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {featured.map((p) => (
+            <li key={p.slug}>
+              <ProjectCard p={toSummary(p)} />
+            </li>
+          ))}
+        </ul>
+      </Container>
+
+      <Container className="pb-8">
+        <SectionHeading
+          eyebrow="Outputs"
+          title="Papers, manuscripts and data"
+          action={
+            <Link href="/research" className="link-quiet text-sm text-ink">
+              Statuses explained →
+            </Link>
+          }
+        />
+        <ul className="-mt-4 divide-y divide-line">
+          {papers.slice(0, 5).map((p) => (
+            <PaperRow key={p.slug} paper={p} />
+          ))}
+        </ul>
+      </Container>
+    </>
   );
 }

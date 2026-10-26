@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rohit Kumar · research and engineering portfolio
 
-## Getting Started
+A static Next.js site that documents research, projects and results with the evidence behind every number.
+Each project can be read five ways (30-second overview, plain English, engineering, research and evaluation,
+recruiter summary) and every paper states its exact status.
 
-First, run the development server:
+## Run it
+
+Requires Node.js 20.9+ and pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev                 # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Checks (all must pass before a deploy):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm typecheck           # route types + TypeScript
+pnpm lint                # ESLint (Next.js core-web-vitals + TypeScript rules)
+pnpm build               # production build; also validates all content (see below)
+pnpm start --port 3002   # serve the build, then in a second terminal:
+pnpm check:site http://localhost:3002   # every sitemap page: status, one h1, unique title and
+                                        # description, canonical, og:image, JSON-LD, internal links,
+                                        # #anchors, noopener, 404 page
+pnpm check:links         # the same plus every external link
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy
 
-## Learn More
+The whole site prerenders to static output (`ensureStatic = "navigation"` in the root layout makes the build fail if
+any route stops being static).
 
-To learn more about Next.js, take a look at the following resources:
+1. Push this folder to a GitHub repository.
+2. Import it on Vercel (framework preset: Next.js; no other settings needed).
+3. Set the environment variable `NEXT_PUBLIC_SITE_URL` to the final domain, for example `https://example.com`.
+   It is used for canonical URLs, the sitemap, robots.txt, Open Graph images and JSON-LD. Without it, Vercel's
+   production URL is used, and a local build uses `http://localhost:3000`.
+4. Redeploy after changing the domain so canonical URLs are regenerated.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                         routes (App Router, all statically prerendered)
+│   ├── page.tsx                 /            home
+│   ├── research/                /research, /research/[slug]      papers, manuscripts, dataset
+│   ├── projects/                /projects, /projects/[slug]      filterable list, five-mode case studies
+│   ├── experience/ skills/ about/ contact/
+│   ├── opengraph-image.tsx      site card; [slug]/opengraph-image.tsx per project and paper
+│   └── sitemap.ts robots.ts icon.svg not-found.tsx error.tsx
+├── content/                     ALL content lives here, as typed TypeScript
+│   ├── types.ts                 the content model (Project, Paper, Block, Metric, ...)
+│   ├── index.ts                 registry + build-time validation
+│   ├── site.ts                  profile, education, experience, skills, ratings
+│   ├── projects/*.ts            one file per project
+│   └── papers/*.ts              papers, manuscripts, dataset
+├── components/
+│   ├── content/                 block renderer, KaTeX math, metric cards, evidence/status tags
+│   ├── diagrams/                spec-driven HTML diagrams (specs.ts holds every diagram)
+│   ├── charts/                  dependency-free dumbbell and bar charts
+│   └── project/ research/ home/ site/
+└── lib/                         SEO helpers, search index, OG card
+scripts/check-site.mjs           crawler used by check:site and check:links
+```
 
-## Deploy on Vercel
+Design: strict black, white and pale neutrals in light and dark themes; distinctions are encoded by structure
+(filled, outlined, dashed, dotted), never by colour. Typography: IBM Plex Sans and Plex Mono (self-hosted by
+`next/font`). Motion is CSS only: staggered entrances, scroll-driven reveals (`animation-timeline: view()` where
+supported), draw-in diagrams and charts, a sliding tab indicator, and native view transitions between routes
+(project titles morph from card to page). All motion is disabled under `prefers-reduced-motion`, and no content
+waits on JavaScript. The only runtime dependency beyond Next.js and React is KaTeX, which runs at build time.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Adding content
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**A project:** copy an existing file in `src/content/projects/`, fill in every field of the `Project` type, import
+it in `src/content/index.ts` and add it to the `projects` array. The page, card, search entry, sitemap entry,
+Open Graph image and JSON-LD are generated from it.
+
+**A paper:** the same with `src/content/papers/` and the `papers` array. Use `status` exactly:
+`published`, `accepted`, `submitted`, `under-review`, `preprint`, `manuscript` (complete, not submitted),
+`in-progress`, `dataset`. Give `abstract` only when it may be public; otherwise give `disclosure`.
+
+**Long-form text** is a list of blocks: `p`, `list`, `table`, `equation` (KaTeX), `code`, `metrics`, `callout`,
+`diagram` (an id from `components/diagrams/specs.ts`), `chart`, `steps`, `kv`, `h3`. Inline text supports
+`**bold**`, `` `code` ``, `[label](url)` and `$math$`.
+
+**Every number** is a `Metric` with `measures`, `method`, `source` and an evidence `kind`
+(`held-out`, `validation`, `leaderboard`, `exploratory`, `simulation`, `measured`, `reported`). The kind is shown on
+the card so held-out, validation and leaderboard numbers are never confused.
+
+**Validation** runs on every build (`src/content/index.ts`): unique kebab-case slugs, related slugs that exist,
+https links, unique section ids, provenance on every metric, no DOI on unpublished work, an abstract or a
+disclosure note on every unpublished paper, and a list of claims that must never appear (for example "34 states",
+a CPRI appointment, a patent, a medal).
+
+## Sources
+
+Every fact comes from `D:\Resume\00_MASTER_LIST.md`, `D:\MTech` (RE-FUSED results, status files and manuscript
+PDFs), the public GitHub repositories under `github.com/Ohi-Me`, and the competition logs in `D:\Hackathon`.
+Content was checked against them on 26 October 2026. Open questions for the author are kept in a local
+`CONFIRM.md`, which is git-ignored so private notes are never published.

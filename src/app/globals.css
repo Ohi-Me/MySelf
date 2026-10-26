@@ -1,26 +1,425 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ------------------------------------------------------------------ */
+/* Tokens: strict black, white and pale neutrals. Distinctions are       */
+/* encoded structurally (solid / dashed / dotted / filled), never by hue. */
+/* ------------------------------------------------------------------ */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --paper: #ffffff;
+  --ink: #0b0b0b;
+  --ink-2: #3a3a3a;
+  --ink-3: #686868;
+  --line: #e6e6e6;
+  --line-strong: #c9c9c9;
+  --pale: #f4f4f4;
+  --pale-2: #ececec;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --paper: #0a0a0a;
+    --ink: #f1f1f1;
+    --ink-2: #c6c6c6;
+    --ink-3: #8f8f8f;
+    --line: #232323;
+    --line-strong: #3b3b3b;
+    --pale: #141414;
+    --pale-2: #1c1c1c;
+    color-scheme: dark;
   }
 }
 
+:root[data-theme="dark"] {
+  --paper: #0a0a0a;
+  --ink: #f1f1f1;
+  --ink-2: #c6c6c6;
+  --ink-3: #8f8f8f;
+  --line: #232323;
+  --line-strong: #3b3b3b;
+  --pale: #141414;
+  --pale-2: #1c1c1c;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-pale: var(--pale);
+  --color-pale-2: var(--pale-2);
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                 */
+/* ------------------------------------------------------------------ */
+
+html {
+  background: var(--paper);
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  transition: top 0.2s var(--ease-out);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Small uppercase mono label */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Links: an underline that draws in from the left on hover */
+.link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  text-decoration: none;
+  transition: background-size 0.35s var(--ease-out);
+}
+.link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+.link-quiet {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size 0.35s var(--ease-out),
+    color 0.2s;
+}
+.link-quiet:hover,
+.link-quiet:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* Long-form reading column */
+.prose-body {
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+}
+.prose-body strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.inline-code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--pale);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.05em 0.35em;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------ */
+/* Evidence and status tags: structure instead of colour                */
+/* ------------------------------------------------------------------ */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.32rem 0.55rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.tag[data-style="filled"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.tag[data-style="dashed"] {
+  border-style: dashed;
+}
+.tag[data-style="dotted"] {
+  border-style: dotted;
+  border-color: var(--ink-2);
+  color: var(--ink-2);
+}
+.tag[data-style="muted"] {
+  border-color: var(--line-strong);
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion. Decorative only, switched off for reduced motion. Content is  */
+/* fully visible without any of it, including without JavaScript.        */
+/* ------------------------------------------------------------------ */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes header-line {
+  from {
+    border-bottom-color: transparent;
+  }
+  to {
+    border-bottom-color: var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Load-time entrance, staggered with --i */
+  .enter {
+    animation: rise 0.8s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 80ms + 60ms);
+  }
+
+  /* Hero schematic: strokes draw in on load, a token travels the chain */
+  .schematic .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 1.3s var(--ease-in-out) forwards;
+    animation-delay: calc(var(--i, 0) * 160ms + 300ms);
+  }
+  .schematic .node {
+    animation: fade 0.6s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 160ms + 200ms);
+  }
+  .schematic .token {
+    offset-rotate: 0deg;
+    animation: travel 6s var(--ease-in-out) 2.2s infinite;
+  }
+
+  /* Active reading-mode panel fades in when switched */
+  [data-active-mode] [data-mode-panel] {
+    animation: fade 0.45s var(--ease-out) both;
+  }
+
+  /* Interactive surfaces */
+  .lift {
+    transition:
+      transform 0.35s var(--ease-out),
+      border-color 0.25s,
+      background-color 0.25s;
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+    border-color: var(--ink);
+  }
+  .arrow-nudge {
+    transition: transform 0.3s var(--ease-out);
+  }
+  a:hover .arrow-nudge,
+  button:hover .arrow-nudge {
+    transform: translateX(3px);
+  }
+}
+
+/* Scroll-driven reveals where the browser supports view timelines.
+   Elsewhere content simply appears; nothing waits on JavaScript. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+    .diagram .connector {
+      transform-origin: top;
+      animation: grow-y linear both;
+      animation-timeline: view();
+      animation-range: entry 15% cover 35%;
+    }
+    .chart .bar {
+      transform-origin: left;
+      animation: grow-x linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+    .chart .span {
+      transform-box: fill-box;
+      transform-origin: right;
+      animation: grow-x linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+    .chart .dot {
+      animation: fade linear both;
+      animation-timeline: view();
+      animation-range: entry 25% cover 45%;
+    }
+    .site-header {
+      animation: header-line linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 120px;
+    }
+  }
+}
+
+/* Route changes: a short cross-fade; project titles morph between pages */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  animation-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Reading modes: one panel at a time once the switcher is active.
+   Pages add a <noscript> rule that shows every panel without JavaScript. */
+[data-active-mode] [data-mode-panel] {
+  display: none;
+}
+[data-active-mode="overview"] [data-mode-panel="overview"],
+[data-active-mode="plain"] [data-mode-panel="plain"],
+[data-active-mode="engineering"] [data-mode-panel="engineering"],
+[data-active-mode="research"] [data-mode-panel="research"],
+[data-active-mode="recruiter"] [data-mode-panel="recruiter"] {
+  display: block;
+}
+
+/* Native dialog used by the command palette */
+dialog.palette[open] {
+  animation: rise 0.28s var(--ease-out);
+}
+dialog.palette::backdrop {
+  animation: fade 0.2s ease-out;
+}
+
+/* KaTeX follows the ink colour in both themes */
+.katex {
+  font-size: 1.06em;
+  color: var(--ink);
+}
+.katex-display {
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+/* Print: plain black on white, every reading mode shown */
+@media print {
+  .site-header,
+  .site-footer,
+  .no-print {
+    display: none !important;
+  }
+  [data-mode-panel] {
+    display: block !important;
+  }
 }
