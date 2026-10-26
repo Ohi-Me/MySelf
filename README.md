@@ -2,7 +2,9 @@
 
 A static Next.js site that documents research, projects and results with the evidence behind every number.
 Each project can be read five ways (30-second overview, plain English, engineering, research and evaluation,
-recruiter summary) and every paper states its exact status.
+recruiter summary) and every paper states its exact status. Every project and paper also has an animated pipeline,
+the problems it resolved and where it applies in practice, and every paper can be read in place as a manuscript
+sheet with its version history ("What we updated"), on its own page or expanded inline on `/research`.
 
 ## Run it
 
@@ -57,6 +59,7 @@ src/
 │   └── papers/*.ts              papers, manuscripts, dataset
 ├── components/
 │   ├── content/                 block renderer, KaTeX math, metric cards, evidence/status tags
+│   ├── story/                   animated pipeline, problems resolved, where it applies
 │   ├── diagrams/                spec-driven HTML diagrams (specs.ts holds every diagram)
 │   ├── charts/                  dependency-free dumbbell and bar charts
 │   └── project/ research/ home/ site/
@@ -64,9 +67,11 @@ src/
 scripts/check-site.mjs           crawler used by check:site and check:links
 ```
 
-Design: strict black, white and pale neutrals in light and dark themes; distinctions are encoded by structure
-(filled, outlined, dashed, dotted), never by colour. Typography: IBM Plex Sans and Plex Mono (self-hosted by
-`next/font`). Motion is CSS only: staggered entrances, scroll-driven reveals (`animation-timeline: view()` where
+Design: warm black ink on a family of cream papers (page, lightest-cream sheets, two quiet cream panels and a deep
+cream accent); the dark theme inverts it to cream ink on warm black. Every text pair meets WCAG AA. Distinctions are
+encoded by structure (filled, outlined, dashed, dotted), never by hue. Typography: IBM Plex Sans and Plex Mono (self-hosted by
+`next/font`). Motion is CSS only: animated pipelines (a token travels the rail and lights each stage; a container query switches
+them between vertical and horizontal), a reading-progress line on the manuscript sheet, staggered entrances, scroll-driven reveals (`animation-timeline: view()` where
 supported), draw-in diagrams and charts, a sliding tab indicator, and native view transitions between routes
 (project titles morph from card to page). All motion is disabled under `prefers-reduced-motion`, and no content
 waits on JavaScript. The only runtime dependency beyond Next.js and React is KaTeX, which runs at build time.
@@ -76,6 +81,10 @@ waits on JavaScript. The only runtime dependency beyond Next.js and React is KaT
 **A project:** copy an existing file in `src/content/projects/`, fill in every field of the `Project` type, import
 it in `src/content/index.ts` and add it to the `projects` array. The page, card, search entry, sitemap entry,
 Open Graph image and JSON-LD are generated from it.
+
+**Every project and paper** also needs `pipeline` (3 to 7 stages), `resolved` (issue and resolution pairs) and
+`impact` (areas where the work could help, written as possible uses, not as deployments). Papers also need
+`revisions`, the manuscript's version history, newest first.
 
 **A paper:** the same with `src/content/papers/` and the `papers` array. Use `status` exactly:
 `published`, `accepted`, `submitted`, `under-review`, `preprint`, `manuscript` (complete, not submitted),
@@ -91,7 +100,8 @@ the card so held-out, validation and leaderboard numbers are never confused.
 
 **Validation** runs on every build (`src/content/index.ts`): unique kebab-case slugs, related slugs that exist,
 https links, unique section ids, provenance on every metric, no DOI on unpublished work, an abstract or a
-disclosure note on every unpublished paper, and a list of claims that must never appear (for example "34 states",
+disclosure note on every unpublished paper, a pipeline, resolved issues and impact on every entry, a version
+history on every paper, and a list of claims that must never appear (for example "34 states",
 a CPRI appointment, a patent, a medal).
 
 ## Sources

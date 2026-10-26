@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SectionView } from "@/components/content/Blocks";
 import { Inline, SmartLink } from "@/components/content/Inline";
 import { MetricGrid } from "@/components/content/MetricGrid";
 import { EvidenceLegend, PaperStatusTag } from "@/components/content/Tags";
 import { PrevNext, RelatedWork } from "@/components/project/Related";
 import { CopyButton } from "@/components/research/CopyButton";
+import { ManuscriptSheet, manuscriptToc } from "@/components/research/Manuscript";
 import { AuthorLine } from "@/components/research/PaperList";
 import { Breadcrumbs, Container } from "@/components/site/Page";
 import { getPaper, papers } from "@/content";
@@ -38,9 +38,10 @@ export default async function PaperPage({ params }: PageProps<"/research/[slug]"
   const next = papers[index + 1];
 
   const toc = [
-    { id: "summary", title: p.abstract ? "Abstract" : "Summary" },
+    { id: "summary", title: "In plain English" },
     ...(p.keyMetrics.length ? [{ id: "key-results", title: "Key results" }] : []),
-    ...p.sections.map((s) => ({ id: s.id, title: s.title })),
+    { id: "manuscript", title: "Read the paper" },
+    ...manuscriptToc(p).map((t) => ({ ...t, sub: true })),
     { id: "authors", title: "Authors and contribution" },
     ...(p.bibtex ? [{ id: "citation", title: "Citation" }] : []),
   ];
@@ -102,7 +103,10 @@ export default async function PaperPage({ params }: PageProps<"/research/[slug]"
               <ul className="space-y-1.5 border-l border-line text-[0.85rem]">
                 {toc.map((t) => (
                   <li key={t.id}>
-                    <a href={`#${t.id}`} className="-ml-px block border-l border-transparent py-0.5 pl-3 text-ink-3 transition-colors hover:border-ink hover:text-ink">
+                    <a
+                      href={`#${t.id}`}
+                      className={`-ml-px block border-l border-transparent py-0.5 text-ink-3 transition-colors hover:border-ink hover:text-ink ${"sub" in t ? "pl-6 text-[0.8rem]" : "pl-3"}`}
+                    >
                       {t.title}
                     </a>
                   </li>
@@ -113,22 +117,10 @@ export default async function PaperPage({ params }: PageProps<"/research/[slug]"
 
           <div className="min-w-0 max-w-3xl space-y-14">
             <section id="summary" className="scroll-mt-28 space-y-6">
-              {p.abstract ? (
-                <div>
-                  <h2 className="mb-4 text-2xl font-medium tracking-tight text-ink">Abstract</h2>
-                  <p className="prose-body">{p.abstract}</p>
-                </div>
-              ) : null}
               <div className="rounded-2xl border border-line bg-pale p-5 sm:p-6" data-reveal>
                 <p className="eyebrow">In plain English</p>
                 <p className="mt-2 text-[1.02rem] leading-relaxed text-ink-2">{p.plain}</p>
               </div>
-              {p.disclosure && (
-                <p className="rounded-xl border border-dashed border-ink-3 px-5 py-4 text-sm leading-relaxed text-ink-2">
-                  <span className="eyebrow mb-1 block">What is shown here</span>
-                  {p.disclosure}
-                </p>
-              )}
             </section>
 
             {p.keyMetrics.length > 0 && (
@@ -139,9 +131,13 @@ export default async function PaperPage({ params }: PageProps<"/research/[slug]"
               </section>
             )}
 
-            {p.sections.map((s) => (
-              <SectionView key={s.id} section={s} />
-            ))}
+            <section id="manuscript" className="scroll-mt-28">
+              <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                <h2 className="text-2xl font-medium tracking-tight text-ink">Read the paper</h2>
+                <p className="text-sm text-ink-3">On this page, no download needed</p>
+              </div>
+              <ManuscriptSheet paper={p} />
+            </section>
 
             <section id="authors" className="scroll-mt-28">
               <h2 className="mb-5 text-2xl font-medium tracking-tight text-ink">Authors and contribution</h2>

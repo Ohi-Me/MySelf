@@ -3,7 +3,7 @@
  * and add it to the array. `validateContent` runs when this module loads, so
  * `next build` fails on a broken reference instead of shipping it.
  */
-import type { Block, Paper, Project, Section } from "./types";
+import type { Block, Paper, Project, Section, Story } from "./types";
 import { refused } from "./projects/re-fused";
 import { amazonMl } from "./projects/amazon-ml";
 import { orbit } from "./projects/orbit";
@@ -72,6 +72,23 @@ export const PROJECT_FIXED_IDS = [
   "lessons",
   "evidence",
   "related",
+  "pipeline",
+  "resolved",
+  "impact",
+];
+
+/** Fixed section ids used by the paper page template. */
+export const PAPER_FIXED_IDS = [
+  "summary",
+  "key-results",
+  "pipeline",
+  "manuscript",
+  "updates",
+  "resolved",
+  "impact",
+  "authors",
+  "citation",
+  "related",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -119,6 +136,14 @@ function sectionText(sections: Section[]): string[] {
   return sections.flatMap((s) => [s.title, ...s.blocks.flatMap(blockText)]);
 }
 
+function storyText(story: Story): string[] {
+  return [
+    ...story.pipeline.flatMap((s) => [s.title, s.detail]),
+    ...story.resolved.flatMap((r) => [r.issue, r.resolution]),
+    ...story.impact.flatMap((i) => [i.area, i.text]),
+  ];
+}
+
 export function validateContent(): string[] {
   const errors: string[] = [];
   const slugs = new Set<string>();
@@ -141,6 +166,12 @@ export function validateContent(): string[] {
     }
   };
 
+  const checkStory = (owner: string, story: Story) => {
+    if (story.pipeline.length < 3 || story.pipeline.length > 7) errors.push(`${owner}: pipeline needs 3 to 7 stages`);
+    if (!story.resolved.length) errors.push(`${owner}: no resolved issues`);
+    if (!story.impact.length) errors.push(`${owner}: no impact areas`);
+  };
+
   const checkText = (owner: string, texts: string[]) => {
     for (const t of texts) {
       for (const f of FORBIDDEN) if (f.pattern.test(t)) errors.push(`${owner}: forbidden claim (${f.reason}) in "${t.slice(0, 80)}"`);
@@ -152,7 +183,9 @@ export function validateContent(): string[] {
     checkLinks(p.slug, p.links);
     checkSections(p.slug, [...p.engineering, ...p.research], PROJECT_FIXED_IDS);
     for (const m of p.keyMetrics) if (!m.measures || !m.method || !m.source) errors.push(`${p.slug}: metric "${m.label}" lacks provenance`);
+    checkStory(p.slug, p);
     checkText(p.slug, [
+      ...storyText(p),
       p.title,
       p.tagline,
       p.summary,
@@ -169,13 +202,23 @@ export function validateContent(): string[] {
   for (const p of papers) {
     for (const r of p.related) if (!slugs.has(r)) errors.push(`${p.slug}: related slug "${r}" does not exist`);
     checkLinks(p.slug, p.links);
-    checkSections(p.slug, p.sections, ["abstract", "plain", "authors", "status", "citation", "related"]);
+    checkSections(p.slug, p.sections, PAPER_FIXED_IDS);
+    checkStory(p.slug, p);
+    if (!p.revisions.length) errors.push(`${p.slug}: no version history`);
     if (!p.authors.some((a) => a.me)) errors.push(`${p.slug}: no author marked as me`);
     if (p.status === "published" && !p.links.length) errors.push(`${p.slug}: published item without a link`);
     if (p.status !== "published" && p.status !== "dataset" && p.doi) errors.push(`${p.slug}: DOI on an unpublished item`);
     if (!p.abstract && !p.disclosure && p.status !== "published" && p.status !== "dataset")
       errors.push(`${p.slug}: unpublished item needs an abstract or a disclosure note`);
-    checkText(p.slug, [p.title, p.statusNote, p.plain, p.abstract ?? "", ...sectionText(p.sections)]);
+    checkText(p.slug, [
+      p.title,
+      p.statusNote,
+      p.plain,
+      p.abstract ?? "",
+      ...sectionText(p.sections),
+      ...storyText(p),
+      ...p.revisions.flatMap((r) => [r.version, r.summary, ...r.changes]),
+    ]);
   }
 
   return errors;

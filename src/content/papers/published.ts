@@ -30,8 +30,8 @@ export const renewableOptimization: Paper = {
   keyMetrics: [],
   sections: [
     {
-      id: "summary",
-      title: "Summary",
+      id: "study",
+      title: "The study",
       blocks: [
         {
           type: "p",
@@ -60,6 +60,36 @@ export const renewableOptimization: Paper = {
   year    = {2026},
   doi     = {10.11591/ijict.v15i1.pp365-373}
 }`,
+  pipeline: [
+    { title: "Data", detail: "Historical weather and generation, solar and wind" },
+    { title: "CUF", detail: "Capacity utilisation factor and efficiency" },
+    { title: "Correlate", detail: "Weather against energy output" },
+    { title: "Forecast", detail: "Machine-learning models" },
+    { title: "Compare", detail: "Solar against wind, year over year" },
+  ],
+  resolved: [
+    {
+      issue: "Installed renewable capacity says little about how much energy it actually produces.",
+      resolution: "The capacity utilisation factor compares actual energy with what the capacity could produce in the period.",
+    },
+    {
+      issue: "How strongly does output depend on weather?",
+      resolution: "A weather–energy correlation analysis and machine-learning forecasts.",
+    },
+  ],
+  impact: [
+    { area: "Solar and wind plant operators", text: "CUF tracking shows which plants under-use their capacity." },
+    { area: "Renewable developers", text: "Comparing technologies by use of capacity, not only by nameplate size." },
+    { area: "Energy planners", text: "In the data studied, wind used its capacity better than solar." },
+  ],
+  revisions: [
+    {
+      version: "Published",
+      date: "March 2026",
+      summary: "IJ-ICT, Vol. 15, No. 1, pp. 365–373, open access.",
+      changes: ["The published article is the version of record; read it in full at the journal."],
+    },
+  ],
   related: ["re-fused", "arc-fault-detection"],
   topics: ["Renewable energy", "Data analysis", "Forecasting"],
 };
@@ -113,6 +143,39 @@ export const arcFault: Paper = {
   year      = {2023},
   url       = {https://ieeexplore.ieee.org/document/10201793}
 }`,
+  pipeline: [
+    { title: "Sample", detail: "Voltage and current through an ADC over SPI" },
+    { title: "Measure", detail: "RMS, peak and phase gap in C++" },
+    { title: "Compare", detail: "Limits with hysteresis" },
+    { title: "Trip", detail: "Relay through GPIO cuts the supply" },
+  ],
+  resolved: [
+    {
+      issue: "Arc faults can start fires before an ordinary breaker reacts.",
+      resolution: "A real-time detector that looks for arc signatures and disconnects the supply.",
+    },
+    {
+      issue: "A relay that switches on every small fluctuation chatters.",
+      resolution: "Hysteresis on the limits.",
+    },
+    {
+      issue: "Detection hardware is often costly.",
+      resolution: "Built on a Raspberry Pi with a low-cost ADC and relay.",
+    },
+  ],
+  impact: [
+    { area: "Homes", text: "Fire prevention in household wiring." },
+    { area: "Factories and industrial panels", text: "Disconnecting a faulty circuit before damage spreads." },
+    { area: "Plant and substation auxiliaries", text: "Low-cost monitoring for auxiliary low-voltage panels in power plants and substations." },
+  ],
+  revisions: [
+    {
+      version: "Published",
+      date: "2023",
+      summary: "IEEE APSIT 2023 proceedings.",
+      changes: ["The published paper is the version of record; read it in full on IEEE Xplore."],
+    },
+  ],
   related: ["renewable-energy-optimization"],
   topics: ["Embedded systems", "Electrical safety", "C++"],
 };
@@ -165,6 +228,42 @@ export const refusedDataset: Paper = {
   version   = {1.0.0},
   doi       = {10.5281/zenodo.23301898}
 }`,
+  pipeline: [
+    { title: "Acquire", detail: "Official reports with hashed manifests" },
+    { title: "Build", detail: "State-day panel and all-India series" },
+    { title: "Study", detail: "Forecasting, correction and scheduling code" },
+    { title: "Freeze", detail: "Confirmatory results and run logs" },
+    { title: "Release", detail: "Zenodo, CC BY 4.0 data, MIT code" },
+  ],
+  resolved: [
+    {
+      issue: "Results that cannot be re-run cannot be checked.",
+      resolution: "Code, panel, frozen results and logs released together; re-scoring the stored results reproduces the hypothesis table exactly.",
+    },
+    {
+      issue: "Large files do not fit in a code repository.",
+      resolution: "The large files are on Zenodo with a DOI; the repository says where each one is.",
+    },
+  ],
+  impact: [
+    { area: "Reviewers", text: "Every number in the manuscripts can be traced to a result file." },
+    { area: "Researchers", text: "A ready baseline for new forecasting and scheduling methods on India's power system." },
+    { area: "Utilities", text: "Open code for acquisition and parsing of official reports." },
+  ],
+  revisions: [
+    {
+      version: "v1.1 prepared",
+      date: "October 2026",
+      summary: "Adds the scripts of the additional analyses run after scoring.",
+      changes: ["Version 1.0.0 stays available under the all-versions DOI."],
+    },
+    {
+      version: "v1.0.0",
+      date: "October 2026",
+      summary: "First public release on Zenodo.",
+      changes: ["Panel, code, frozen results and logs."],
+    },
+  ],
   related: ["india-state-day-panel", "re-fused"],
   topics: ["Open data", "Power systems"],
 };

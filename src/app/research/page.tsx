@@ -26,7 +26,7 @@ export default function ResearchPage() {
         trail={[{ label: "Research", href: "/research" }]}
         eyebrow="Research and publications"
         title="Learning and deciding with data that arrive late, noisy or shifted"
-        lede="My research uses India's power system as a testbed: forecasting from data as it is actually published, turning forecasts into decisions under real settlement rules, and asking when adaptive methods are worth their variance. Every study is pre-registered and scored once."
+        lede="My research uses India's power system as a testbed: forecasting from data as it is actually published, turning forecasts into decisions under real settlement rules, and asking when adaptive methods are worth their variance. Every study is pre-registered and scored once. Each paper below opens in place: its pipeline, sections, the problems it resolves, where it applies and what changed in each version."
       >
         <div className="flex flex-wrap items-center gap-2 text-sm text-ink-3">
           <span>Status key:</span>
@@ -65,7 +65,7 @@ export default function ResearchPage() {
             <SectionHeading title={g.title} />
             <ul className="-mt-4 divide-y divide-line">
               {items.map((p) => (
-                <PaperRow key={p.slug} paper={p} />
+                <PaperRow key={p.slug} paper={p} readable />
               ))}
             </ul>
           </section>

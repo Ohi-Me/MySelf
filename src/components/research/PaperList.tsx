@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Paper } from "@/content/types";
 import { PaperStatusTag } from "@/components/content/Tags";
+import { ManuscriptSheet } from "./Manuscript";
 
 export function AuthorLine({ paper }: { paper: Paper }) {
   return (
@@ -15,9 +16,14 @@ export function AuthorLine({ paper }: { paper: Paper }) {
   );
 }
 
-export function PaperRow({ paper }: { paper: Paper }) {
+/**
+ * One paper in a list. With `readable`, a disclosure under the row opens the
+ * whole manuscript sheet in place, so the paper can be read without leaving
+ * the list.
+ */
+export function PaperRow({ paper, readable = false }: { paper: Paper; readable?: boolean }) {
   return (
-    <li>
+    <li className={readable ? "pb-6" : undefined}>
       <Link href={`/research/${paper.slug}`} className="group grid gap-3 py-6 sm:grid-cols-[9rem_1fr_auto] sm:gap-8" data-reveal>
         <span className="font-mono text-[0.78rem] text-ink-3">{paper.year}</span>
         <span className="min-w-0">
@@ -33,6 +39,22 @@ export function PaperRow({ paper }: { paper: Paper }) {
           <PaperStatusTag status={paper.status} />
         </span>
       </Link>
+      {readable && (
+        <details className="reader sm:ml-[11rem]">
+          <summary className="inline-flex items-center gap-2 rounded-full border border-ink px-3.5 py-1.5 text-sm text-ink transition-colors hover:bg-ink hover:text-paper">
+            <span aria-hidden className="reader-chevron inline-block transition-transform">
+              ›
+            </span>
+            Read the paper here
+            <span className="font-mono text-[0.68rem] text-current opacity-70">
+              {paper.sections.length + 2} sections · pipeline · updates
+            </span>
+          </summary>
+          <div className="mt-5">
+            <ManuscriptSheet paper={paper} prefix={`${paper.slug}-`} />
+          </div>
+        </details>
+      )}
     </li>
   );
 }

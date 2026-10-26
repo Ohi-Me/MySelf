@@ -246,5 +246,37 @@ export const caringu: Project = {
     { label: "Repository and README", href: REPO, note: "Architecture, what is real versus simulated, tests and evaluation." },
     { label: "Scam Lens evaluation", href: `${REPO}/blob/main/docs/lens-eval.md`, note: "640-photo robustness evaluation." },
   ],
+  pipeline: [
+    { title: "Listen", detail: "Voice in on a speaker" },
+    { title: "Screen", detail: "Fixed safety rules read every message first" },
+    { title: "Reason", detail: "Model (Bedrock or Nemotron) picks a tool" },
+    { title: "Guard", detail: "29 MCP tools, each call checked" },
+    { title: "Ask", detail: "Risky actions pause for a human yes" },
+    { title: "Escalate", detail: "Unanswered alerts move to the next family member" },
+  ],
+  resolved: [
+    {
+      issue: "Scam calls and fake \"refund\" payment QR codes aimed at older adults.",
+      resolution: "Scam Lens: OpenCV checks plus fixed rules that flag the pattern before money moves.",
+    },
+    {
+      issue: "A language model cannot be trusted with doses, payments or alerts.",
+      resolution: "Fixed rules, not the model, decide anything risky, and the MCP server pauses for approval through elicitation.",
+    },
+    {
+      issue: "Camera photos arrive blurred or tilted.",
+      resolution: "A QR reading ladder raised the read rate from 89.7% to 99.5% with no wrong reads on 640 generated photos; it refuses rather than guesses.",
+    },
+    {
+      issue: "An alert nobody answers is no alert at all.",
+      resolution: "An escalation ladder hands an unanswered alert to the next family member.",
+    },
+  ],
+  impact: [
+    { area: "Older adults living alone", text: "A voice companion that checks before acting, for people who will talk to a device but not use an app." },
+    { area: "Family caregivers", text: "Alerts, approvals and a shared view from a second app." },
+    { area: "Elder-care homes", text: "Dose and fall routines with a record of every decision." },
+    { area: "Banks and payment apps", text: "The scam-QR and approval patterns transfer to payment safety checks." },
+  ],
   related: ["feelfit", "orbit", "datasentry"],
 };

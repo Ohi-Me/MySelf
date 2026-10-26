@@ -213,6 +213,72 @@ export const adaptiveRiskAversion: Paper = {
       ],
     },
   ],
+  pipeline: [
+    { title: "Forecast", detail: "Calibrated probability forecast of tomorrow's drawal" },
+    { title: "Rule", detail: "Median, fixed risk, coupled risk, copula scenarios or PPO" },
+    { title: "Schedule", detail: "Kept inside the historical envelope and ramp limit" },
+    { title: "Settle", detail: "Stylised daily model of the 2024 deviation settlement" },
+    { title: "Regret", detail: "Cost above the best schedule in hindsight, 516 held-out days" },
+    { title: "Verify", detail: "Official 15-minute charges reproduced within Rs 2.5" },
+  ],
+  resolved: [
+    {
+      issue: "Whether risk aversion that adapts to uncertainty or system stress is worth its complexity had not been tested on held-out data under the actual settlement.",
+      resolution: "A pre-registered test on 516 held-out days: no adaptive rule, the PPO policy included, beat one well-chosen fixed rule.",
+    },
+    {
+      issue: "A daily settlement model may not match what States are really charged.",
+      resolution: "A block-level re-implementation of the 2024 Regulations reproduces 302,400 official ERPC charges within Rs 2.5, and the rules were re-scored per block.",
+    },
+    {
+      issue: "Do forecast improvements actually reach the scheduling decision?",
+      resolution: "A chain test with the rule held fixed: a better forecaster alone lowers mean regret by 0.29 Rs crore per day.",
+    },
+  ],
+  impact: [
+    { area: "State load dispatch centres", text: "One quantile tuned to the actual settlement, plus a better forecast, instead of a complex adaptive policy." },
+    { area: "Distribution companies", text: "A State's deviation charges end up as costs for the utilities and consumers behind it. The figures here come from a stylised settlement, not observed savings." },
+    { area: "Regulators", text: "The best risk-neutral level follows the published rate-to-price ratio, so rule design directly shapes how States schedule." },
+    { area: "Grid operators", text: "Schedules closer to actual drawal mean smaller deviations to balance in real time." },
+  ],
+  revisions: [
+    {
+      version: "Submitted",
+      date: "19 October 2026",
+      summary: "Submitted to IEEE Transactions on Power Systems.",
+      changes: [
+        "The abstract and results add the block-level validation: six Eastern-Region areas, every official 15-minute charge reproduced within Rs 2.5, and the rules re-scored per block.",
+        "Sensitivity analyses reported as not pre-registered: the best single fixed level (60%) and the limit of adaptive levels (at most 0.7% gain, even with hindsight).",
+      ],
+    },
+    {
+      version: "Pre-submission review",
+      date: "10 October 2026",
+      summary: "Two departures from the pre-registration found while reviewing the manuscript, recorded and disclosed; nothing re-run.",
+      changes: [
+        "Tail-day comparisons used a 3-day block bootstrap where the plan said 7-day.",
+        "The scored evaluation has 516 days (1 April 2025 – 29 August 2026), two fewer than the pre-registered window.",
+      ],
+    },
+    {
+      version: "Confirmatory run",
+      date: "18–20 September 2026",
+      summary: "Plan frozen and hashed (tag prereg-v1), then the held-out period scored once on the H100 cluster (job 31823).",
+      changes: [
+        "A first freeze attempt recorded the hash without a git commit; the blinding guard then refused every stage, so no held-out data were read. The freeze step was fixed and re-run with the same plan.",
+        "The leakage test's issue days were moved one year forward for the confirmatory phase; its logic is unchanged.",
+      ],
+    },
+    {
+      version: "Rebuild",
+      date: "February – September 2026",
+      summary: "Earlier stages (RE-FUSED-0 to 8) superseded.",
+      changes: [
+        "All data rebuilt from official reports after an audit found 98.2% of early test-period prices carried forward.",
+        "Single-seed results dropped after a 22.5% headline gain did not replicate; the learned policy now runs 5 seeds.",
+      ],
+    },
+  ],
   related: ["re-fused", "publication-delay-forecasting", "india-state-day-panel"],
   topics: ["Decision-making under uncertainty", "Power systems", "Pre-registration", "Reinforcement learning"],
 };

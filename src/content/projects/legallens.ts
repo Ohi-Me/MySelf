@@ -87,5 +87,31 @@ export const legallens: Project = {
   limitations: ["Rule-based classification; no measured accuracy.", "Not legal advice."],
   lessons: ["Describe what actually runs, even when the README says more."],
   evidence: [{ label: "Repository", href: REPO, note: "Code and deployment notes." }],
+  pipeline: [
+    { title: "Upload", detail: "A contract as PDF" },
+    { title: "Parse", detail: "Text split into clauses" },
+    { title: "Classify", detail: "10 clause types, transparent rules" },
+    { title: "Check", detail: "Flags missing critical clauses" },
+    { title: "Report", detail: "Risk distribution, downloadable" },
+  ],
+  resolved: [
+    {
+      issue: "Reading a contract for risky or missing clauses is slow.",
+      resolution: "Clause-level sorting into 10 types with a summary of the risk distribution.",
+    },
+    {
+      issue: "Non-lawyers do not know what is missing.",
+      resolution: "Explicit flags for missing critical clauses.",
+    },
+    {
+      issue: "An opaque model is hard to trust for legal text.",
+      resolution: "Rule-based classification whose reasons can be read.",
+    },
+  ],
+  impact: [
+    { area: "Small businesses and startups", text: "A first pass before paying for a lawyer's review. Not legal advice." },
+    { area: "Freelancers", text: "Spotting a missing payment or termination clause before signing." },
+    { area: "Procurement teams", text: "Triage of many vendor contracts so legal time goes to the risky ones." },
+  ],
   related: ["assessiq", "feelfit"],
 };
