@@ -96,7 +96,11 @@ a CPRI appointment, a patent, a medal).
 
 ## Sources
 
-Every fact comes from `D:\Resume\00_MASTER_LIST.md`, `D:\MTech` (RE-FUSED results, status files and manuscript
-PDFs), the public GitHub repositories under `github.com/Ohi-Me`, and the competition logs in `D:\Hackathon`.
-Content was checked against them on 26 October 2026. Open questions for the author are kept in a local
-`CONFIRM.md`, which is git-ignored so private notes are never published.
+Every fact comes from the author's records: the public GitHub repositories under `github.com/Ohi-Me`, the
+RE-FUSED results and manuscripts, the academic CV and the competition logs. Content was checked against them on
+26 October 2026.
+
+## License
+
+The source code is under the MIT License. The written content, the CV and the images are © Rohit Kumar, all rights
+reserved. See [LICENSE](LICENSE).

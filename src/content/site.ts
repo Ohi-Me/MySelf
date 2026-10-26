@@ -1,7 +1,7 @@
 /**
- * Profile facts shown across the site. Every value here is taken from
- * D:\Resume\00_MASTER_LIST.md (checked 2026-10-24/25), the academic CV, or
- * the public repositories. Ratings are dated because they change.
+ * Profile facts shown across the site. Every value here is taken from the
+ * author's master record (checked 2026-10-24/25), the academic CV, or the
+ * public repositories. Ratings are dated because they change.
  */
 import type { ExternalLink } from "./types";
 
@@ -10,7 +10,7 @@ export const profile = {
   role: "Machine learning researcher and engineer",
   affiliation: "M.Tech, Artificial Intelligence · NIT Jalandhar",
   location: "Jalandhar, Punjab, India",
-  email: "rohitaryan0613@gmail.com",
+  email: "therohitkumar.build@gmail.com",
   orcid: "0009-0004-7936-9683",
   /** One sentence used for the default page description. */
   description:
