@@ -1,15 +1,25 @@
 import Link from "next/link";
-import { Tag } from "@/components/content/Tags";
+import { EvidenceTag } from "@/components/content/Tags";
 import { HeroSchematic } from "@/components/home/HeroSchematic";
 import { ProjectCard, toSummary } from "@/components/project/ProjectCard";
 import { PaperRow } from "@/components/research/PaperList";
 import { Container, SectionHeading } from "@/components/site/Page";
 import { papers, projects } from "@/content";
+import { platforms } from "@/content/competitive";
 import { achievements, profile, profileLinks, researchThemes } from "@/content/site";
 import { absoluteUrl, jsonLd } from "@/lib/site";
 
-const kindStyle = { leaderboard: "dashed", reported: "muted", "held-out": "filled", measured: "outline" } as const;
-const kindLabel = { leaderboard: "Leaderboard", reported: "Reported", "held-out": "Held-out test", measured: "Measured" } as const;
+/** Hero figures: each one is stated, with its source, elsewhere on the site. */
+const heroStats = [
+  { value: "104,550", label: "State-days in the open RE-FUSED dataset", href: "/projects/re-fused" },
+  { value: "35 / 52", label: "pre-registered checks supported, scored once", href: "/projects/re-fused" },
+  { value: "#206", label: "team rank, Amazon ML Challenge 2026", href: "/projects/amazon-ml-entity-resolution" },
+  {
+    value: platforms.reduce((n, p) => n + p.solved, 0).toLocaleString("en-US"),
+    label: "problems solved on LeetCode, Codeforces and CodeChef",
+    href: "/competitions",
+  },
+];
 
 export default function Home() {
   const featured = projects.filter((p) => p.featured);
@@ -33,12 +43,13 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
 
       <Container>
-        <section className="grid items-center gap-12 pt-14 pb-20 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pb-28">
+        <section className="grid-paper -mx-4 grid items-center gap-12 px-4 pt-14 pb-14 sm:-mx-6 sm:px-6 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pb-20">
           <div>
-            <p className="eyebrow enter" style={{ ["--i" as string]: 0 }}>
+            <p className="eyebrow enter flex items-center gap-2" style={{ ["--i" as string]: 0 }}>
+              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-ink" />
               {profile.affiliation} · 2025 – 2027
             </p>
-            <h1 className="enter mt-5 text-[2.7rem] leading-[1.02] font-medium tracking-[-0.035em] text-ink sm:text-[4rem]" style={{ ["--i" as string]: 1 }}>
+            <h1 className="display enter mt-5 text-[3rem] leading-[0.98] text-ink sm:text-[4.6rem]" style={{ ["--i" as string]: 1 }}>
               Rohit Kumar
             </h1>
             <p className="enter mt-6 max-w-xl text-[1.15rem] leading-relaxed text-ink-2 sm:text-[1.25rem]" style={{ ["--i" as string]: 2 }}>
@@ -63,6 +74,17 @@ export default function Home() {
             <HeroSchematic />
           </div>
         </section>
+
+        <ul className="enter mb-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line lg:mb-24 lg:grid-cols-4" style={{ ["--i" as string]: 4 }} aria-label="Key figures">
+          {heroStats.map((s) => (
+            <li key={s.label} className="bg-paper">
+              <Link href={s.href} className="group flex h-full flex-col gap-3 p-5 transition-colors hover:bg-pale sm:p-6">
+                <span className="stat text-[1.9rem] sm:text-[2.3rem]">{s.value}</span>
+                <span className="text-[0.85rem] leading-snug text-ink-3 group-hover:text-ink-2">{s.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </Container>
 
       <section className="border-y border-line bg-pale/60 py-16 sm:py-20">
@@ -73,7 +95,7 @@ export default function Home() {
               <li key={a.title} className="bg-paper p-5 sm:p-6" data-reveal>
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-mono text-[0.72rem] text-ink-3">{a.date}</span>
-                  <Tag label={kindLabel[a.kind]} style={kindStyle[a.kind]} />
+                  <EvidenceTag kind={a.kind} />
                 </div>
                 <p className="mt-4 font-medium text-ink">
                   {a.href ? (

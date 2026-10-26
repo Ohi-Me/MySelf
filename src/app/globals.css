@@ -56,6 +56,7 @@
   --color-pale-2: var(--pale-2);
   --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-display: var(--font-plex-serif), ui-serif, Georgia, serif;
 }
 
 /* ------------------------------------------------------------------ */
@@ -108,6 +109,71 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-3);
+}
+
+/* Display headings: serif, tight, set in the ink colour */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-feature-settings: "kern", "liga";
+}
+.display em {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+/* Lab-notebook dot grid behind headers; fades out at the edges */
+.grid-paper {
+  position: relative;
+  isolation: isolate;
+}
+.grid-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -11px -11px;
+  mask-image: radial-gradient(ellipse 75% 70% at 30% 35%, #000 20%, transparent 75%);
+  opacity: 0.55;
+}
+
+/* Cards share one surface, border and hover behaviour */
+.card {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--paper);
+}
+
+/* Big tabular figures used in stat strips */
+.stat {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* Rating sparkline: a hairline series with the best point marked */
+.sparkline path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+.sparkline .area {
+  fill: var(--pale-2);
+  stroke: none;
+}
+.sparkline .grid {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  vector-effect: non-scaling-stroke;
 }
 
 /* Links: an underline that draws in from the left on hover */
@@ -191,6 +257,12 @@ body {
 .tag[data-style="muted"] {
   border-color: var(--line-strong);
   color: var(--ink-3);
+}
+/* Each evidence kind also carries its own shape, so it reads without colour */
+.tag[data-glyph]::before {
+  content: attr(data-glyph) / "";
+  font-size: 0.82em;
+  line-height: 1;
 }
 
 /* ------------------------------------------------------------------ */

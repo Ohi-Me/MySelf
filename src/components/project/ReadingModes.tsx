@@ -95,7 +95,15 @@ export function ReadingModes({ modes, children }: { modes: ModeDef[]; children: 
   return (
     <div data-active-mode={mode}>
       <div className="sticky top-16 z-30 -mx-4 border-b border-line bg-paper/90 px-4 backdrop-blur-md sm:-mx-6 sm:px-6">
-        <div ref={listRef} role="tablist" aria-label="Reading mode" className="relative flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
+        <div className="overflow-x-auto py-2.5 [scrollbar-width:none]">
+        <div ref={listRef} role="tablist" aria-label="Reading mode" className="relative inline-flex gap-0.5 rounded-full border border-line bg-pale p-1">
+          {indicator && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-1 left-0 rounded-full bg-ink transition-[transform,width] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)]"
+              style={{ width: indicator.width, transform: `translateX(${indicator.left}px)` }}
+            />
+          )}
           {modes.map((m, i) => (
             <button
               key={m.id}
@@ -109,20 +117,17 @@ export function ReadingModes({ modes, children }: { modes: ModeDef[]; children: 
               tabIndex={mode === m.id ? 0 : -1}
               onClick={() => select(m.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`shrink-0 rounded-full px-3.5 py-2 text-[0.85rem] whitespace-nowrap transition-colors ${
-                mode === m.id ? "text-ink" : "text-ink-3 hover:text-ink"
+              className={`relative z-10 inline-flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[0.85rem] whitespace-nowrap transition-colors duration-300 ${
+                mode === m.id ? "text-paper" : "text-ink-3 hover:text-ink"
               }`}
             >
+              <span aria-hidden className="font-mono text-[0.66rem] opacity-60">
+                0{i + 1}
+              </span>
               {m.label}
             </button>
           ))}
-          {indicator && (
-            <span
-              aria-hidden
-              className="pointer-events-none absolute bottom-1 h-[2px] rounded bg-ink transition-[transform,width] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)]"
-              style={{ width: indicator.width - 28, transform: `translateX(${indicator.left + 14}px)` }}
-            />
-          )}
+        </div>
         </div>
       </div>
 

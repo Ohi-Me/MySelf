@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Tag } from "@/components/content/Tags";
 import { Container, PageHeader, SectionHeading } from "@/components/site/Page";
-import { codingProfiles, education, positions, ratingsCheckedOn, researchExperience } from "@/content/site";
+import { codingProfiles, education, mlCompetitions as competitions, positions, ratingsCheckedOn, researchExperience } from "@/content/site";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
@@ -10,36 +10,6 @@ export const metadata = pageMetadata({
     "Education, research experience, competition results, competitive programming ratings and positions of responsibility of Rohit Kumar, each with its status and date.",
   path: "/experience",
 });
-
-const competitions = [
-  {
-    name: "Amazon ML Challenge 2026",
-    result: "Team rank 206, final leaderboard, macro F0.5 0.988285",
-    detail: "Business entity resolution, 1.73M entities against about 10M records. Team of four.",
-    status: "Completed",
-    href: "/projects/amazon-ml-entity-resolution",
-  },
-  {
-    name: "RSNA Knee Abnormality Detection (Kaggle)",
-    result: "Rank 542 of 6,425 (top 9%), private AUC 0.943",
-    detail: "Solo. Final blend includes credited public models; no medal is shown on the profile.",
-    status: "Completed",
-    href: "/projects/rsna-knee",
-  },
-  {
-    name: "ARC Prize 2026, ARC-AGI-2 (Kaggle)",
-    result: "Best public leaderboard score 29.44 so far",
-    detail: "Faster decoding within a fixed GPU budget. Final results after 2 November 2026.",
-    status: "Ongoing",
-    href: "/projects/arc-agi-inference",
-  },
-  {
-    name: "Google Gemma 4 Developer Agent (Kaggle)",
-    result: "No final result yet",
-    detail: "A coding agent on Gemma 4 served with vLLM. The competition ends on 2 December 2026.",
-    status: "Ongoing",
-  },
-];
 
 export default function ExperiencePage() {
   return (
@@ -108,6 +78,7 @@ export default function ExperiencePage() {
                   ) : (
                     c.name
                   )}
+                  <span className="text-ink-3"> · {c.host}</span>
                 </p>
                 <p className="mt-1 text-[0.95rem] text-ink-2">{c.result}</p>
                 <p className="mt-1 text-sm text-ink-3">{c.detail}</p>
@@ -121,7 +92,14 @@ export default function ExperiencePage() {
       </section>
 
       <section className="mb-20">
-        <SectionHeading title="Competitive programming" />
+        <SectionHeading
+          title="Competitive programming"
+          action={
+            <Link href="/competitions" className="link-quiet text-sm text-ink">
+              Rating history and stats →
+            </Link>
+          }
+        />
         <div className="overflow-x-auto rounded-xl border border-line" role="region" aria-label="Competitive programming ratings" tabIndex={0}>
           <table className="w-full min-w-[30rem] text-left text-[0.9rem]">
             <thead>

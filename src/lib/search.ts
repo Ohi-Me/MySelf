@@ -16,6 +16,7 @@ const pages: SearchItem[] = [
   { title: "Research and publications", href: "/research", type: "Page", summary: "Papers, manuscripts, the dataset and their statuses.", keywords: "papers publications manuscripts zenodo" },
   { title: "Projects", href: "/projects", type: "Page", summary: "Every project, searchable and filterable.", keywords: "projects case studies" },
   { title: "Experience and education", href: "/experience", type: "Page", summary: "Degrees, research experience, competitions and positions.", keywords: "education cgpa competitions ratings" },
+  { title: "Competitions", href: "/competitions", type: "Page", summary: "Kaggle results, coding ratings, problems solved and rating history.", keywords: "kaggle leetcode codeforces codechef rating contests competitive programming stats" },
   { title: "Skills and engineering", href: "/skills", type: "Page", summary: "Capabilities, each linked to the work that shows it.", keywords: "skills stack capabilities" },
   { title: "About", href: "/about", type: "Page", summary: "Academic journey, research interests and how I work.", keywords: "about philosophy interests" },
   { title: "Contact and CV", href: "/contact", type: "Page", summary: "Email, profiles and the CV download.", keywords: "contact email cv resume download" },

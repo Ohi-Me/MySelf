@@ -59,7 +59,51 @@ export const codingProfiles: { label: string; href: string; best: string; curren
   },
 ];
 
-export const ratingsCheckedOn = "24 October 2026";
+export const ratingsCheckedOn = "26 October 2026";
+
+export interface MlCompetition {
+  name: string;
+  host: string;
+  result: string;
+  detail: string;
+  status: "Completed" | "Ongoing";
+  href?: string;
+}
+
+/** Machine-learning competitions, shown on /competitions and /experience. */
+export const mlCompetitions: MlCompetition[] = [
+  {
+    name: "RSNA Knee Abnormality Detection",
+    host: "Kaggle",
+    result: "Rank 542 of 6,425 (top 9%), private AUC 0.943",
+    detail: "Solo. The final blend includes credited public models; own models alone scored 0.927 to 0.929 private. No medal is shown on the profile.",
+    status: "Completed",
+    href: "/projects/rsna-knee",
+  },
+  {
+    name: "Amazon ML Challenge 2026",
+    host: "Amazon",
+    result: "Team rank 206, final leaderboard, macro F0.5 0.988285",
+    detail: "Business entity resolution, 1.73M entities against about 10M records. Team of four.",
+    status: "Completed",
+    href: "/projects/amazon-ml-entity-resolution",
+  },
+  {
+    name: "ARC Prize 2026, ARC-AGI-2",
+    host: "Kaggle",
+    result: "Best public leaderboard score 29.44 so far",
+    detail: "Faster decoding within a fixed GPU budget. Final results after 2 November 2026.",
+    status: "Ongoing",
+    href: "/projects/arc-agi-inference",
+  },
+  {
+    name: "Google Gemma 4 Developer Agent",
+    host: "Kaggle",
+    result: "No final result yet",
+    detail: "A coding agent on Gemma 4 served with vLLM. The competition ends on 2 December 2026.",
+    status: "Ongoing",
+  },
+];
 
 export interface EducationItem {
   degree: string;

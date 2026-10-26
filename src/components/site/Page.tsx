@@ -53,14 +53,14 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className="pt-10 pb-12 sm:pt-14 sm:pb-16">
+    <header className="grid-paper -mx-4 px-4 pt-10 pb-12 sm:-mx-6 sm:px-6 sm:pt-14 sm:pb-16">
       {trail && <Breadcrumbs trail={trail} />}
       {eyebrow && (
         <p className="eyebrow enter mt-8" style={{ ["--i" as string]: 1 }}>
           {eyebrow}
         </p>
       )}
-      <h1 className="enter mt-3 max-w-4xl text-[2.2rem] leading-[1.08] font-medium tracking-[-0.025em] text-ink sm:text-[3.1rem]" style={{ ["--i" as string]: 2 }}>
+      <h1 className="display enter mt-3 max-w-4xl text-[2.4rem] leading-[1.06] text-ink sm:text-[3.5rem]" style={{ ["--i" as string]: 2 }}>
         {title}
       </h1>
       {lede && (
@@ -83,7 +83,7 @@ export function SectionHeading({ eyebrow, title, action }: { eyebrow?: string; t
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-4" data-reveal>
       <div>
         {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
-        <h2 className="text-2xl font-medium tracking-tight text-ink sm:text-[1.7rem]">{title}</h2>
+        <h2 className="display text-[1.65rem] leading-tight text-ink sm:text-[2rem]">{title}</h2>
       </div>
       {action}
     </div>

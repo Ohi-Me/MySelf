@@ -28,11 +28,11 @@ export function Header() {
     <header className="site-header sticky top-0 z-40 border-b border-transparent bg-paper/85 backdrop-blur-md supports-[backdrop-filter]:bg-paper/70">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" className="group flex items-baseline gap-2" aria-label="Rohit Kumar, home">
-          <span className="text-[0.98rem] font-semibold tracking-tight text-ink">Rohit Kumar</span>
-          <span className="hidden font-mono text-[0.68rem] tracking-wide text-ink-3 uppercase sm:inline">ML research · engineering</span>
+          <span className="text-[0.98rem] font-semibold tracking-tight whitespace-nowrap text-ink">Rohit Kumar</span>
+          <span className="hidden font-mono text-[0.68rem] tracking-wide text-ink-3 uppercase xl:inline">ML research · engineering</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden md:block">
+        <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {NAV.map((item) => (
               <li key={item.href}>
@@ -61,7 +61,7 @@ export function Header() {
           <ThemeToggle />
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -83,7 +83,7 @@ export function Header() {
       <nav
         id="mobile-nav"
         aria-label="Main"
-        className={`overflow-hidden border-t border-line bg-paper transition-[max-height,opacity] duration-300 md:hidden ${
+        className={`overflow-hidden border-t border-line bg-paper transition-[max-height,opacity] duration-300 lg:hidden ${
           open ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 border-transparent opacity-0"
         }`}
         hidden={!open}

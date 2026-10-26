@@ -3,6 +3,7 @@ export const NAV = [
   { href: "/research", label: "Research" },
   { href: "/projects", label: "Projects" },
   { href: "/experience", label: "Experience" },
+  { href: "/competitions", label: "Competitions" },
   { href: "/skills", label: "Skills" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

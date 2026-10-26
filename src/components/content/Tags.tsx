@@ -32,9 +32,20 @@ const evidenceStyle: Record<EvidenceKind, TagStyle> = {
   reported: "muted",
 };
 
-export function Tag({ label, style = "outline", title }: { label: string; style?: TagStyle; title?: string }) {
+/** A shape per evidence kind, strongest evidence first. Decorative: the label carries the meaning. */
+const evidenceGlyph: Record<EvidenceKind, string> = {
+  "held-out": "■",
+  measured: "●",
+  leaderboard: "▲",
+  validation: "◆",
+  simulation: "○",
+  exploratory: "◌",
+  reported: "–",
+};
+
+export function Tag({ label, style = "outline", title, glyph }: { label: string; style?: TagStyle; title?: string; glyph?: string }) {
   return (
-    <span className="tag" data-style={style} title={title}>
+    <span className="tag" data-style={style} data-glyph={glyph} title={title}>
       {label}
     </span>
   );
@@ -50,7 +61,7 @@ export function ProjectStatusTag({ status }: { status: ProjectStatus }) {
 
 export function EvidenceTag({ kind }: { kind: EvidenceKind }) {
   const l = evidenceLabel[kind];
-  return <Tag label={l.short} style={evidenceStyle[kind]} title={l.long} />;
+  return <Tag label={l.short} style={evidenceStyle[kind]} title={l.long} glyph={evidenceGlyph[kind]} />;
 }
 
 /** Legend explaining the evidence tags, shown once per page that uses metrics. */
